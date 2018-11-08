@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<typeAlias type="kr.co.bapsi.recipe.vo.RecipeVO" alias="recipeVO" />
+		<typeAlias type="kr.co.bapsi.recipe.vo.TagVO" alias="tagVO" />
+		<typeAlias type="kr.co.bapsi.recipe.vo.IngVO" alias="ingVO" />
+		<typeAlias type="kr.co.bapsi.recipe.vo.ReplyVO" alias="replyVO" />
+		<typeAlias type = "kr.co.bapsi.member.vo.MemberVO" alias = "MemberVO" />
+		<typeAlias type = "kr.co.bapsi.upload.vo.UploadVO" alias = "UploadVO" />
+		<typeAlias type = "kr.co.bapsi.entertain.vo.MukbangVO" alias = "MukbangVO" />
+		<typeAlias type = "kr.co.bapsi.entertain.vo.RandomEatVO" alias = "RandomEatVO" />
+	</typeAliases>
+</configuration>
+

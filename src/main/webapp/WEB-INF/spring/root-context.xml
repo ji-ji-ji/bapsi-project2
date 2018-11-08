@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:aop="http://www.springframework.org/schema/aop"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+   xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+   xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.1.xsd
+      http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd" >
+   
+ 
+   
+   <!-- Root Context: defines shared resources visible to all other web components -->
+      <bean id="dataSource"
+         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+         
+         <!--더 정확한 로그분석을 위한 설정  -->
+         <!-- <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+         <property name="url" value="jdbc:mysql://127.0.0.1:3308/spring_prj"/> -->
+         
+         <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
+         <property name="url" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl"/>
+         <property name="username" value="hr"/>
+         <property name="password" value="hr"/>
+      </bean>      
+     
+       <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+         <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+      </bean> 
+      
+        
+      <bean id="sqlSessionFactory"
+         class="org.mybatis.spring.SqlSessionFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="configLocation" value="classpath:/mybatis-config.xml"/>
+            <property name="mapperLocations" value="classpath:mappers/**/*.xml"/>
+      </bean> 
+  
+  <!--이메일 인증 구현 -->
+	<!-- 메일 보내기 -->
+	<!-- 니ㅣ니니니니니  -->
+	<bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="username" value="bapsiteam@gmail.com" />
+		<property name="password" value="!aaaa1111" />
+
+
+		<!-- email 요청시는 SMTP -->
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+
+
+	</bean>
+	<bean id="email" class="kr.co.bapsi.mail.Email">
+	</bean>
+	<bean id="emailSender" class="kr.co.bapsi.mail.EmailSender">
+	</bean>
+		<!-- google Class Bean설정 추가 -->
+	<!-- 클라이언트ID와 보안비밀 세팅 -->
+	<bean id="googleConnectionFactory"
+	  class="org.springframework.social.google.connect.GoogleConnectionFactory">
+	  <constructor-arg
+	    value="1010391818469-ir3v0jfbb7aamt0u5j36pppmobug85me.apps.googleusercontent.com" />
+	  <constructor-arg value="diFJbV7UOhjL2Vr5GZrPVSB7" />
+	</bean>
+	<!-- 승인된 자바스크립트 원본과 승인된 리디렉션 URI -->
+	<bean id="googleOAuth2Parameters"
+	  class="org.springframework.social.oauth2.OAuth2Parameters">
+	  <property name="scope"
+	    value="https://www.googleapis.com/auth/plus.login" />
+	  <property name="redirectUri"
+	    value="http://localhost:8000/bapsi/googleSuccess" />
+	</bean>
+  
+  
+      <context:component-scan base-package="kr.co.bapsi.member.dao"/>
+      <context:component-scan base-package="kr.co.bapsi.service"/>  
+      <context:component-scan base-package="kr.co.bapsi.login.dao"/> 
+      <context:component-scan base-package="kr.co.bapsi.login.service"/> 
+      <context:component-scan base-package="kr.co.bapsi.recipe.dao"/>
+      <context:component-scan base-package="kr.co.bapsi.recipe.service"/>
+      <context:component-scan base-package="kr.co.bapsi.recipe.reply.dao"/>
+      <context:component-scan base-package="kr.co.bapsi.recipe.reply.service"/>
+       
+      
+     
+</beans>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="kr.co.bapsi.entertain.dao.EntertainDAO">
+  
+  <sql id="mukbangSQL">
+  
+       <where>
+       
+          <if test="findType != null and findType =='A'.toString()">
+           and youtuber like '%'||#{keyword}||'%'
+           or korea like '%'||#{keyword}||'%'
+           or china like '%'||#{keyword}||'%'
+           or usa like '%'||#{keyword}||'%'
+           or japan like '%'||#{keyword}||'%'
+           or night like '%'||#{keyword}||'%'
+           or dessert like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType =='Y'.toString()">
+           and youtuber like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType =='K'.toString()">
+           and korea like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType=='C'.toString()">
+           and china like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType=='U'.toString()">
+           and usa like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and  findType == 'J'.toString()">
+           and japan like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType =='N'.toString()">
+          and night like '%'||#{keyword}||'%'
+        </if>
+         <if test="findType != null and findType =='D'.toString()">
+          and dessert like '%'||#{keyword}||'%'
+        </if>
+     </where>
+     
+  </sql>
+  
+  <select id = "findMukbang" resultType="MukbangVO">
+  select b.rnum, b.no, b.korea, b.china, b.japan, b.usa, b.night, b.dessert, b.youtuber, b.url 
+     from(
+     select rownum as rnum, a.no, a.korea, a.china, a.japan, a.usa, a.night, a.dessert, a.youtuber, a.url
+        from(
+        select no, korea, china, japan, usa, night, dessert, youtuber, url
+        from mukbang_t
+        
+        <include refid="mukbangSQL" />
+     
+     <![CDATA[
+        order by no desc) a
+        where rownum <=#{startPage}+(#{numPerPage}-1))b
+        where b.rnum >= #{startPage}
+     ]]>
+  </select>
+  
+  <select id = "findCount" resultType = "int">
+  
+     select count(no)
+     from mukbang_t
+     
+     <include refid="mukbangSQL" />
+     
+  </select>
+  
+  <select id = "randomEat" parameterType="int" resultType="RandomEatVO">
+  	select food, url
+  	from randomEat_t
+  	where no = #{no}
+  </select>
+     
+     
+  </mapper>
