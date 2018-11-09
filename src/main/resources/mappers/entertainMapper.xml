@@ -51,7 +51,7 @@
      select rownum as rnum, a.no, a.korea, a.china, a.japan, a.usa, a.night, a.dessert, a.youtuber, a.url
         from(
         select no, korea, china, japan, usa, night, dessert, youtuber, url
-        from mukbang_t
+        from mukbang
         
         <include refid="mukbangSQL" />
      
@@ -65,7 +65,7 @@
   <select id = "findCount" resultType = "int">
   
      select count(no)
-     from mukbang_t
+     from mukbang
      
      <include refid="mukbangSQL" />
      
@@ -73,7 +73,7 @@
   
   <select id = "randomEat" parameterType="int" resultType="RandomEatVO">
   	select food, url
-  	from randomEat_t
+  	from randomEat
   	where no = #{no}
   </select>
      

@@ -11,21 +11,21 @@
  <!--************************회원가입 ****************8***************  -->
    <!-- 회원가입 -->
      <insert id="join" parameterType = "MemberVO">
-        insert into ruser_t (no, email, password, hintq, hinta, name, nickname, tel, age, gender, comments)
-        values(ruser_no_seq.nextval, #{email}, #{password}, #{hintq}, #{hinta}, #{name}, #{nickname}, #{tel}, #{age}, #{gender}, #{comments})
+        insert into ruser (no, email, password, hintq, hinta, name, nickname, tel, age, gender, comments)
+        values(ruser_seq.nextval, #{email}, #{password}, #{hintq}, #{hinta}, #{name}, #{nickname}, #{tel}, #{age}, #{gender}, #{comments})
      </insert>
   
      <!-- 이메일 중복체크 -->
      <select id="checkEmail" parameterType="String" resultType="Integer">
         select count(*)
-        from ruser_t
+        from ruser
         where email = #{email}
      </select>
   
      <!-- 닉네임 중복 체크 -->
      <select id="checkNickname" parameterType="String" resultType="Integer">
         select count(*)
-        from ruser_t
+        from ruser
         where nickname = #{nickname}
      </select>
   
@@ -38,7 +38,7 @@
      <!-- 마이페이지 -->
      <select id = "myPage" parameterType="int" resultType = "MemberVO">
         select no, email, hintq, hinta, name, nickname, tel, age, gender, comments
-        from ruser_t
+        from ruser
         where no = #{no}
      </select>
   
@@ -46,12 +46,12 @@
      <select id = "myPagefile" parameterType="int" resultType = "UploadVO">
      	select file_fakename
      	from user_photo
-     	where no = #{no}
+     	where no = #{userNo}
      </select>
   
      <!-- 회원정보 수정 -->
      <update id = "update" parameterType = "MemberVO">
-        update ruser_t
+        update ruser
         set hintq = #{hintq}, hinta = #{hinta}, age = #{age}, nickname = #{nickname}, tel = #{tel}, comments = #{comments}
         where no = #{no}
      </update>
@@ -59,14 +59,14 @@
      
      <!-- 회원탈퇴 -->
      <delete id = "selfDelete" parameterType = "int">
-        delete ruser_t
+        delete ruser
         where no = #{no}
      </delete>
      
      <!-- 회원탈퇴시 프로필 삭제 -->
      <delete id = "profileDelete" parameterType = "int">
      	delete user_photo
-     	where no = #{no}
+     	where no = #{userNo}
      </delete>
      
  <!--*****************************************************  -->    
@@ -76,7 +76,7 @@
        <!-- 회원정보 상세조회 -->
      <select id="detailMember" parameterType="int" resultType="MemberVO">
         select no, email, name, nickname, tel, gender, age, comments, type, to_char(reg_date, 'yyyy-mm-dd') as reg_date
-        from ruser_t
+        from ruser
         where no = #{no}
      </select>
 
@@ -84,12 +84,12 @@
 	<select id="detailProfile" parameterType = "int" resultType="UploadVO">
 		select file_fakename
 		from user_photo
-		where no = #{no}
+		where no = #{userNo}
 	</select>
 	
      <!-- 관리자 페이지 : 회원정보 수정처리 -->
      <update id="memberUpdate" parameterType = "MemberVO">
-        update ruser_t
+        update ruser
         set name = #{name}, age = #{age}, nickname = #{nickname}, tel = #{tel}, comments = #{comments}
         where no = #{no}
      </update>
@@ -97,7 +97,7 @@
      
       <!-- 강제회원탈퇴 -->
      <delete id = "adminDelete" parameterType = "int">
-        delete ruser_t
+        delete ruser
         where no = #{no}
      </delete>
      
@@ -111,7 +111,7 @@
 		 select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.age, a.comments, a.type, a.point
 		    from (
 		        select no, email, name, nickname,age, tel, comments, type, point
-		            from ruser_t
+		            from ruser
 		            order by no desc) a
 		        where rownum <= #{page}*10 ) b
 		where b.rnum > (#{page}*10)-10
@@ -127,7 +127,7 @@
  		 select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.age, a.comments, a.type, a.point
  		    from (
      			select no, email, name, nickname,age, tel, comments, type, point
- 		            from ruser_t
+ 		            from ruser
  		            order by no desc) a
  		    where rownum <= #{startPage}+(#{numPerPage}-1) ) b
  		  where b.rnum >= #{startPage}
@@ -138,7 +138,7 @@
      <!--관리자페이지: 페이징 전체 데이터 가져오기  -->
      <select id="pagingCountData" resultType="int">
      <![CDATA[
-     	select count(no) from ruser_t
+     	select count(no) from ruser
      	where no>0
      ]]>
        
@@ -200,7 +200,7 @@
  		 select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.gender, a.age, a.comments, a.type, a.point, a.reg_date
  		    from (
      			select no, email, name, nickname,age, tel, gender, comments, type, point, to_char(reg_date, 'yyyy/mm/dd') as reg_date
- 		            from ruser_t
+ 		            from ruser
  		            
 					<include refid="findSQL"></include>
 				      
@@ -218,7 +218,7 @@
   <select id="findCountDataM" resultType="int">
   
 
-     	select count(no) from ruser_t
+     	select count(no) from ruser
 
 		<include refid="findSQL"></include>
 
@@ -243,7 +243,7 @@
      <!-- 로그인 -->
      <select id = "loginCheck" parameterType = "MemberVO" resultType="MemberVO">
         select no, email, password, name, nickname, tel, age, comments, type, point
-        from ruser_t
+        from ruser
         where email = #{email} and password = #{password}
      </select>
      
@@ -252,45 +252,45 @@
  
      <!-- 체크박스 회원 탈퇴 = -->
      <delete id="checkDelete" parameterType="MemberVO">	
-    	delete ruser_t
+    	delete ruser
     	where no = #{no}
      </delete>
 	<!-- 체크박스 회원 관리자 등업 -->     
 	<update id="checkUpM" parameterType="MemberVO">
-		update ruser_t
+		update ruser
 		set type='S'
 		where no = #{no}
 	</update>
 	<!-- 체크박스 회원 일반회원 강등 -->
 	<update id="checkDownM" parameterType="MemberVO">
-			update ruser_t
+			update ruser
 			set type='U'
 			where no = #{no}
 	</update>  
      
      <!--*********************이메일 비밀번호 인증************************************ -->
 	<update id="newPassword" parameterType="MemberVO">
-		update ruser_t
+		update ruser
 		set password = #{password}
 		where email=#{email} and hintq=#{hintq} and hinta=#{hinta}
 	</update>
 
 	<select id="comparePassword" parameterType="MemberVO" resultType="MemberVO">
 	select *
-	from ruser_t
+	from ruser
 	where email=#{email} and password = #{password}
 	</select>
 	
  <!--*********************구글정보있으면 가입, 정보없으면 로그인************************************ -->    
  	<select id="checkJoinGoogle" parameterType="MemberVO" resultType="Integer">
  	select count(*)
- 	from ruser_t
+ 	from ruser
  	where email=#{email} and name=#{name} and social_login='socialLogin'
  	</select>
  	
  	<insert id="joinGoogle" parameterType="MemberVO">
-	 insert into ruser_t(no, email, name, nickname, social_login)
-	values(ruser_no_seq.nextval, #{email}, #{name}, #{name}, #{socialLogin})
+	 insert into ruser(no, email, name, nickname, social_login)
+	values(ruser_seq.nextval, #{email}, #{name}, #{name}, #{socialLogin})
  	</insert>
      
      

@@ -53,7 +53,7 @@ public class UploadController {
            // 파일명 랜덤생성 메서드호출
            savedName = uploadFile(savedName, file.getBytes());
            
-           upload.setNo(authUser.getNo());
+           upload.setUserNo(authUser.getNo());
            upload.setFile_oriname(file.getOriginalFilename());
            upload.setFile_fakename(savedName);
            

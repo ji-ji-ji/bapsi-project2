@@ -134,7 +134,7 @@
         color: #565656; 
      }
   
-     .search{
+     .search2{
         background-color: #c12048 !important;
         border-color: #c12048 !important; 
         color: #ffffff !important; 
@@ -254,11 +254,11 @@
       		<form class="mbr-form" action="" method="get" data-form-title="Mobirise Form">
         		<fieldset class="field1">
         			<div class="IngredientSearch">
-						<input  class="whatIngredient" type="text" name="keyword" id="thisIngredients" value="${fCri.keyword}" placeholder = "재료명으로 검색해보세요"/>
-        				<button class="search" id="findBtn">검색</button>
+						<input  class="whatIngredient" type="text" name="" id="thisIngredients" value="" placeholder = "재료명으로 검색해보세요"/>
+        				<button class="search2" id="">검색</button>
         			</div>
 		     <ul class="big_wrap">
-		        <li><a class="messi" href="${pageContext.request.contextPath}/messi" value="">곡류</a></li>
+		        <li><a class="messi" href="${pageContext.request.contextPath}/messi">곡류</a></li>
 		        <li><a class="" href="">면/만두류</a></li>
 		        <li><a class="" href="">빵류</a></li>
 		        <li><a class="" href="">과자류</a></li>

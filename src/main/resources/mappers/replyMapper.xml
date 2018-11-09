@@ -9,29 +9,29 @@
       r.comments,
       to_char(r.reg_date, 'yyyy-MM-dd') as regDate, to_char(r.updatedate,'yyyy-MM-dd') as
       updateDate, u.nickname as nickName
-      from rcomments_t r, ruser_t u
+      from rcomments r, ruser u
       where r.login_user_no = u.no
       and recipe_no = #{recipeNo}
       order by no desc
    </select>
 
    <insert id="write">
-      insert into rcomments_t(no, recipe_no, comments,
+      insert into rcomments(no, recipe_no, comments,
       login_user_no)
-      values(rcomments_t_no_seq.nextval, #{recipeNo},
+      values(rcomments_seq.nextval, #{recipeNo},
       #{comments}, #{loginUserNo})
    </insert>
 
    <!-- 댓글 수정 -->
    <update id="modify">
-      update rcomments_t
+      update rcomments
       set comments = #{comments},
       updatedate = sysdate
       where no = #{no}
    </update>
 
    <delete id="reDelete">
-      delete from rcomments_t
+      delete from rcomments
       where no = #{no}
    </delete>
 
@@ -43,7 +43,7 @@
           select rownum as rnum, A.no, A.recipe_no, A.login_user_no, A.comments, A.reg_date, A.updatedate, A.nickname
           from (
               select r.no as no, r.recipe_no as recipe_no, r.login_user_no as login_user_no, r.comments as comments, r.reg_date as reg_date, r.updatedate as updatedate, u.nickname as nickname
-              from rcomments_t r, ruser_t u
+              from rcomments r, ruser u
                 where  r.login_user_no = u.no
                 and recipe_no = #{recipeNo}
               order by no asc) A      
@@ -54,7 +54,7 @@
 
    <select id="reCount" resultType="int">
    <![CDATA[
-    select count(recipe_no) from rcomments_t
+    select count(recipe_no) from rcomments
     where rownum > 0
     and recipe_no = #{recipeNo}
    ]]>

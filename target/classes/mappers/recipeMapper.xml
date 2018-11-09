@@ -6,18 +6,18 @@
 
 	<!-- 레시피 등록 -->
 	<insert id="insertRecipe" parameterType="recipeVO">
-		insert into recipeboard_t(no, user_no, title, sub_title, recipe_name, user_nickname, 
+		insert into recipeboard(no, user_no, title, sub_title, recipe_name, user_nickname, 
 		 time, cost, content, servings)
-		  values(receipe_t_no_seq.nextval, #{userNo}, #{title}, #{subTitle}, #{recipeName}, #{userNickName},
+		  values(recipeboard_seq.nextval, #{userNo}, #{title}, #{subTitle}, #{recipeName}, #{userNickName},
 		   #{time}, #{cost}, #{content}, #{servings})
 	</insert>
 	<insert id="insertRIngre" parameterType="map">
 		insert into receipe_Ingredients(r_no, i_no, amount) 
-		  values((select max(no) from recipeboard_t), #{ing}, #{amount})
+		  values((select max(no) from recipeboard), #{ing}, #{amount})
 	</insert>
 	<insert id="insertRTag" parameterType="map">
-      insert into receipe_tags(r_no, t_no) 
-        values((select max(no) from recipeboard_t), #{tag})
+      insert into recipe_tags(no,r_no, t_no) 
+        values(recipe_tags_seq.nextval ,(select max(no) from recipeboard), #{tag})
 	</insert>
 
    <select id="selectAllTag" resultType="tagVO">
@@ -38,13 +38,13 @@
 		to_char(reg_date, 'yyyy-MM-dd') as regDate
 		, view_cnt as
 		viewCnt, servings
-		from recipeboard_t
+		from recipeboard
 		where no = #{no}
 	</select>
 	<select id="selectTagByNo" parameterType="int"
 		resultType="tagVO">
 		select t.name as tagName, t.type as tagType, t.no as tagNo
-		from receipe_tags r, tags t, recipeboard_t b
+		from recipe_tags r, tags t, recipeboard b
 		where b.no = r.r_no
 		and t.no = r.t_no
 		and b.no = #{no}
@@ -53,7 +53,7 @@
 	<select id="selectIngByNo" parameterType="int"
 		resultType="ingVO">
 		select i.name as ingName, r.amount as amount, i.type as ingType, i.no as ingNo 
-		from recipeboard_t b, receipe_Ingredients r, ingredients_t i
+		from recipeboard b, receipe_Ingredients r, ingredients_t i
 		where b.no = r.r_no
 		and i.no = r.i_no
 		and b.no = #{no}
@@ -62,7 +62,7 @@
 
 	<!-- 레시피 수정 -->
 	<update id="updateRecipe" parameterType="recipeVO">
-		update recipeboard_t set title=#{title}, sub_title=#{subTitle}, recipe_name=#{recipeName}, time=#{time},
+		update recipeboard set title=#{title}, sub_title=#{subTitle}, recipe_name=#{recipeName}, time=#{time},
 		 cost=#{cost}, content=#{content}, servings=#{servings}, reg_date=sysdate
 		where no=#{no}
 	</update>
@@ -74,11 +74,11 @@
 		  values(#{no}, #{ing}, #{amount})
 	</insert>
 	<delete id="deleteRTag" parameterType="int">
-		delete from receipe_tags where r_no=#{no}
+		delete from recipe_tags where r_no=#{no}
 	</delete>
 	<insert id="updateRTag" parameterType="map">
-		insert into receipe_tags(r_no, t_no) 
-		  values(#{no}, #{tag})
+		insert into recipe_tags(no,r_no, t_no) 
+		  values(recipe_tags_seq.nextval,#{no}, #{tag})
 	</insert>
 	
 	  <!-- 페이징 -->
@@ -92,7 +92,7 @@
                     , A.user_nickname, A.recipe_name, A.reg_date, A.view_cnt, A.servings
           from (
               select no, user_no, title, sub_title, time, cost, content, user_nickname, recipe_name, reg_date, view_cnt, servings
-              from recipeboard_t
+              from recipeboard
               order by reg_date desc) A
           where rownum <= #{page}*10) X
       where X.rnum >= (#{page}*10)-9
@@ -110,7 +110,7 @@
                     , A.user_nickname, A.recipe_name, A.reg_date, A.view_cnt, A.servings
           from (
               select no, user_no, title, sub_title, time, cost, content, user_nickname, recipe_name, reg_date, view_cnt, servings
-              from recipeboard_t
+              from recipeboard
               order by no desc) A      
           where rownum <= #{startPage}+(#{numPerPage}-1)) X
       where X.rnum >= #{startPage}
@@ -120,14 +120,14 @@
    <!-- 페이징 -->
    <select id="countData" resultType="int">
    <![CDATA[
-    select count(*) from recipeboard_t
+    select count(*) from recipeboard
     where rownum > 0
    ]]>
    </select>
 
    <!-- 조회수 증가 -->
    <update id="updateView" parameterType="int">
-      update recipeboard_t
+      update recipeboard
       set view_cnt
       = view_cnt + 1
       where no = #{no}
@@ -135,7 +135,7 @@
 
 <!-- 게시글 삭제 -->
    <delete id="delete" parameterType="int">
-      delete from recipeboard_t
+      delete from recipeboard
       where no = #{no}
    </delete>
 
@@ -183,7 +183,7 @@
                     , A.user_nickname, A.recipe_name, A.reg_date, A.view_cnt, A.servings
           from (
               select no, user_no, title, sub_title, time, cost, content, user_nickname, recipe_name, reg_date, view_cnt, servings
-              from recipeboard_t
+              from recipeboard
               
               <include refid="findSQL"></include>
         <![CDATA[      
@@ -196,7 +196,7 @@
   <!-- (데이터 수 검색)  -->
   <select id="findCountDataR" resultType="int">
      	select count(*) 
-     	from recipeboard_t
+     	from recipeboard
      
 		<include refid="findSQL"></include>
   </select>
@@ -213,7 +213,7 @@
           from (
               select b.no, b.user_no, b.title, b.sub_title, b.time, b.cost, b.content, b.user_nickname, b.recipe_name, b.reg_date, b.view_cnt, b.servings
 
-              from recipeboard_t b, receipe_tags r, tags t 
+              from recipeboard b, recipe_tags r, tags t 
                 where b.no = r.r_no
                 and t.no = r.t_no
                 and t.name = #{TagName}
@@ -232,7 +232,7 @@
 
         select count(*)
      from (select b.no
-             from recipeboard_t b, receipe_tags r, tags t 
+             from recipeboard b, recipe_tags r, tags t 
                 where b.no = r.r_no
                 and t.no = r.t_no
                 and t.name = #{TagName}
@@ -246,7 +246,7 @@
 	<select id = "checkBoard" resultType="int">      
 	select count(*)
 	from(select user_no , type
-	from rpoint_t
+	from rpoint
 	where type = 'U'
 	and user_no = #{userNo} 
 	and receipe_no  = #{receipeNo})
@@ -255,48 +255,48 @@
 	<select id = "checkBoardO" resultType="int">      
 	select count(*)
 	from(select user_no , type
-	from rpoint_t
+	from rpoint
 	where type = 'D'
 	and user_no = #{userNo} 
 	and receipe_no  = #{receipeNo})
 	</select>
 	
 	<update id="getRPoint">
-		update recipeboard_t 
+		update recipeboard 
 		set point = (point+1) 
 		where no = #{receipeNo}
 	</update>
 	
 	<update id="getMPoint">
-		update ruser_t
+		update ruser
 		set point = (point+1) 
 		where no = #{receipeUserNo}
 	</update>
 	
 	<update id="loseRPoint">
-		update recipeboard_t 
+		update recipeboard 
 		set point = (point-1) 
 		where no = #{receipeNo}
 	</update>
 	
 	<update id="loseMPoint">
-		update ruser_t
+		update ruser
 		set point = (point-1) 
 		where no = #{receipeUserNo}
 	</update>
 
 	<insert id="addLogUp">
-		insert into rpoint_t(user_no,receipe_user_no, receipe_no, type) 
-		values(#{userNo}, #{receipeUserNo}, #{receipeNo}, 'U')
+		insert into rpoint(no, user_no,receipe_user_no, receipe_no, type) 
+		values(rpoint_seq.nextval, #{userNo}, #{receipeUserNo}, #{receipeNo}, 'U')
 	</insert>
 	
 	<insert id="addLogDownP">
-		insert into rpoint_t(user_no,receipe_user_no, receipe_no, type) 
-		values(#{userNo}, #{receipeUserNo}, #{receipeNo}, 'D')		
+		insert into rpoint(no, user_no,receipe_user_no, receipe_no, type) 
+		values(rpoint_seq.nextval, #{userNo}, #{receipeUserNo}, #{receipeNo}, 'D')		
 	</insert> 
 	
 	<delete id="deleteLog">
-		delete from rpoint_t
+		delete from rpoint
 		where user_no = #{userNo}
 		and receipe_user_no = #{receipeUserNo}
 		and receipe_no =  #{receipeNo}
@@ -304,7 +304,7 @@
 	</delete>
 	
 	<delete id="deleteLogDown">
-		delete from rpoint_t
+		delete from rpoint
 		where user_no = #{userNo}
 		and receipe_user_no = #{receipeUserNo}
 		and receipe_no =  #{receipeNo}
@@ -313,7 +313,7 @@
 	
 	<select id="checkLike" resultType="int">
 		select count(*) 
-		from(select * from rpoint_t
+		from(select * from rpoint
 			 where user_no = #{userNo}
 			 and receipe_no =  #{receipeNo}
 			 and type = 'U')
@@ -321,7 +321,7 @@
 	
 	<select id="checkDown" resultType="int">
 		select count(*) 
-		from(select * from rpoint_t
+		from(select * from rpoint
 			 where user_no = #{userNo}
 			 and receipe_no =  #{receipeNo}
 			 and type = 'D')
@@ -338,7 +338,7 @@
                     , A.user_nickname, A.recipe_name, A.reg_date, A.view_cnt, A.servings,A.point
           from (
               select no, user_no, title, sub_title, time, cost, content, user_nickname, recipe_name, reg_date, view_cnt, servings,point
-              from recipeboard_t
+              from recipeboard
               order by point desc) A
           where rownum <= 4) X
           ]]>
@@ -346,13 +346,13 @@
  <!--************************팔로우*********************************  -->    
 	
 	<update id="getFollowCnt">
-		update ruser_t 
+		update ruser 
 		set follower_cnt = (follower_cnt+1) 
 		where no = #{receipeUserNo}
 	</update>
 
 	<update id="loseFollowCnt">
-		update ruser_t 
+		update ruser 
 		set follower_cnt = (follower_cnt-1) 
 		where no = #{receipeUserNo}
 	</update>

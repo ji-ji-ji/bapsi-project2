@@ -9,25 +9,25 @@
 
 
 	<insert id = "uploadProfile" parameterType = "MemberVO">
-   		insert into user_photo(no, file_oriname, file_fakename)
-   		values(#{no}, #{file_oriname}, #{file_fakename})
+   		insert into user_photo(no, user_no, file_oriname, file_fakename)
+   		values(user_photo_seq.nextval , #{userNo}, #{file_oriname}, #{file_fakename})
    </insert>
  
  	<delete id = "deleteProfile" parameterType = "int">
  		delete user_photo
- 		where no = #{no}
+ 		where no = #{userNo}
  	</delete>
 
 	<delete id = "memberDeleteProfile" parameterType = "int">
  		delete user_photo
- 		where no = #{no}
+ 		where no = #{userNo}
  	</delete>
 
 
 	<select id = "profile" parameterType = "int" resultType = "UploadVO">
 		select file_fakename
 		from user_photo
-		where no = #{no}
+		where no = #{userNo}
 	</select>
  	
   </mapper>
