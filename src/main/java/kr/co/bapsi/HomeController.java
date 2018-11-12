@@ -18,7 +18,7 @@ import kr.co.bapsi.recipe.service.RecipeService;
 import kr.co.bapsi.recipe.vo.FindCriteria;
 import kr.co.bapsi.recipe.vo.PagingMaker;
 import kr.co.bapsi.recipe.vo.RecipeVO;
-//11월12일
+//11월12일 11:47
 /**
  * Handles requests for the application home page.
  */
