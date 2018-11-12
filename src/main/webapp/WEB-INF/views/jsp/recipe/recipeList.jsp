@@ -105,9 +105,9 @@
                      <div class="card-img">
                      	<c:choose>
 	                     	<c:when test="${empty userVO }">
-	                           <button id="button1" onclick="alert('로그인 후 이용가능합니다');return false;">
-	                           <img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="" >
-	                  			</button>
+	                           <a href="#" onclick="AfterLogin();"> 
+	                           		<img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="">
+	                  		   </a>
 	                     	</c:when>
                      	<c:otherwise>
 	                        <a
@@ -139,8 +139,8 @@
                      <div class="card-img">
                      	<c:choose>
 	                     	<c:when test="${empty userVO }">
-	                     		<a href="${pageContext.request.contextPath}/login">
-	                			<img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="">
+	                     		<a href="#" onclick="AfterLogin();"> 
+	                				<img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="">
 	                     		</a>
 	                     	</c:when>
                      	<c:otherwise>
@@ -197,12 +197,11 @@
    
 	 <script type="text/javascript">
 	 		function AfterLogin(){
-	 			if(confirm("로그인후 사용가능합니다.로그인창으로 이동하시겠습니까?"){
+	 			if(confirm('로그인 후 이용해주시길 바랍니다.')){
 	 				location.href="${pageContext.request.contextPath}/login";
-	 				retrun true;
 	 			}else{
-	 				return false;
-	 			});
+	 				location.href="${pageContext.request.contextPath}/recipe/recipeList";
+	 			}
 	 		}
 	 
 	      	$(document).ready(function(){
