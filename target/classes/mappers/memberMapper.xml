@@ -234,9 +234,9 @@
  
 <!--****************회원목록(관리자) 관련 메소드******************   -->
      <!--네이버 로그인 API insert 값  -->
-     <insert id="naverInsert">
-     	insert into naver_t (no, email, name)
-     	values(naver_no_seq.nextval,#{email}, #{name} )
+     <insert id="naverInsert" parameterType = "MemberVO" >
+     	insert into ruser(no, email, name,hintq, hinta,nickname)
+     	values(ruser_seq.nextval,#{email}, #{name}, #{hintq}, #{hinta},#{nickname})
      </insert>
      
      

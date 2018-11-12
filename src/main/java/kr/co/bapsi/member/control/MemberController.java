@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
 import org.springframework.social.oauth2.GrantType;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 
 import kr.co.bapsi.mail.Email;
@@ -420,20 +420,29 @@ public class MemberController {
 		System.out.println("email: " + email);
 		System.out.println("name: " + name);
 		// System.out.println("nickname: " + nickname);
-
-		MemberVO mvo = new MemberVO();
-		mvo.setEmail(email);
-		mvo.setName(name);
+		
+		MemberVO userVO =new MemberVO();
+				
 		// mvo.setNickname(nickname);
 
-		if (mvo == null) {
-			memberService.naverInsert(mvo);
-			System.out.println("네이버 userVO를 확인하세요 " + mvo);
-			session.setAttribute("userVO", mvo);
+		if (userVO.getEmail() == null) {
+			userVO.setNo(1);
+			userVO.setEmail(email);
+			userVO.setName(name);
+			userVO.setAge("나이대를 회원정보 수정을 통해 선택해주세요");
+			userVO.setHintq("질문을 회원정보 수정을 통해 선택해주세요");
+			userVO.setHinta("대답을 회원정보 수정을 통해 선택해주세요");
+			userVO.setNickname("별병을 회원정보 수정을 통해 선택해주세요");
+			memberService.naverInsert(userVO);
+			
+			System.out.println("네이버 userVO를 확인하세요 " + userVO);
+			session.setAttribute("userVO", userVO);
 			return "jsp/login/callback";
 
 		} else {
-			session.setAttribute("userVO", mvo);
+
+			session.setAttribute("userVO", userVO);
+			System.out.println("네이버 userVO 집어넣장!!" + userVO);
 			return "jsp/login/callback";
 
 		}

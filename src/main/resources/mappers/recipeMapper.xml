@@ -12,8 +12,8 @@
 		   #{time}, #{cost}, #{content}, #{servings})
 	</insert>
 	<insert id="insertRIngre" parameterType="map">
-		insert into receipe_Ingredients(r_no, i_no, amount) 
-		  values((select max(no) from recipeboard), #{ing}, #{amount})
+		insert into recipe_ingredients(no,r_no, i_no, amount) 
+		  values(recipe_ingredients_seq.nextval,(select max(no) from recipeboard), #{ing}, #{amount})
 	</insert>
 	<insert id="insertRTag" parameterType="map">
       insert into recipe_tags(no,r_no, t_no) 
@@ -25,7 +25,7 @@
        order by no
    </select>
    <select id="selectAllIngre" resultType="ingVO">
-      select no as ingNo, name ingName, type ingType from ingredients_t
+      select no as ingNo, name ingName, type ingType from ingredients
        order by no
    </select>
 	
@@ -53,7 +53,7 @@
 	<select id="selectIngByNo" parameterType="int"
 		resultType="ingVO">
 		select i.name as ingName, r.amount as amount, i.type as ingType, i.no as ingNo 
-		from recipeboard b, receipe_Ingredients r, ingredients_t i
+		from recipeboard b, recipe_ingredients r, ingredients i
 		where b.no = r.r_no
 		and i.no = r.i_no
 		and b.no = #{no}
@@ -67,11 +67,11 @@
 		where no=#{no}
 	</update>
 	<delete id="deleteRIng" parameterType="int">
-		delete from receipe_Ingredients where r_no=#{no}
+		delete from recipe_ingredients where r_no=#{no}
 	</delete>
 	<insert id="updateRIng" parameterType="map">
-		insert into receipe_Ingredients(r_no, i_no, amount) 
-		  values(#{no}, #{ing}, #{amount})
+		insert into recipe_ingredients(no,r_no, i_no, amount) 
+		  values(recipe_ingredients_seq.nextval,#{no}, #{ing}, #{amount})
 	</insert>
 	<delete id="deleteRTag" parameterType="int">
 		delete from recipe_tags where r_no=#{no}
@@ -357,23 +357,23 @@
 		where no = #{receipeUserNo}
 	</update>
 
-	<insert id="insertFollower">
-		insert into rfollow_t(user_no,follow_user_no) 
-		values(#{userNo}, #{receipeUserNo})
+	 <insert id="insertFollower">
+		insert into rfollow(no,follower,follwee) 
+		values(rfollow_seq.nextval,#{follwer}, #{followee})
 	</insert>
 	
 	<delete id="deleteFollower">
-		delete from rfollow_t
-		where user_no = #{userNo}
-		and follow_user_no = #{receipeUserNo}
+		delete from rfollow
+		where follower = #{userNo}
+		and followee = #{receipeUserNo}
 		and type = 'F'
 	</delete>
 	
 	<select id="followCheck" resultType="int">
 		select count(*) 
-		from(select * from rfollow_t
-			 where user_no = #{userNo}
-			 and follow_user_no =  #{receipeUserNo}
+		from(select * from rfollow
+			 where follower = #{userNo}
+			 and followee =  #{receipeUserNo}
 			 and type = 'F')
 	</select>
 	

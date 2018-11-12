@@ -103,12 +103,19 @@
                <div class="card p-3 col-12 col-md-6 col-lg-4">
                   <div class="card-wrapper">
                      <div class="card-img">
-                        <a
-                           href="${pageContext.request.contextPath}/recipe/readPage${pagingMaker.makeFind(pagingMaker.cri.page)}&no=${recipe.no}&userNo=${userVO.no}&click=1">
-                           <img
-                           src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg"
-                           alt="Mobirise" title="">
-                        </a>
+                     	<c:choose>
+	                     	<c:when test="${empty userVO }">
+	                           <button id="button1" onclick="alert('로그인 후 이용가능합니다');return false;">
+	                           <img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="" >
+	                  			</button>
+	                     	</c:when>
+                     	<c:otherwise>
+	                        <a
+	                           href="${pageContext.request.contextPath}/recipe/readPage${pagingMaker.makeFind(pagingMaker.cri.page)}&no=${recipe.no}&userNo=${userVO.no}&click=1">
+	                           <img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="">
+	                        </a>
+                        </c:otherwise>
+                        </c:choose>
                      </div>
                      <div class="card-box">
                         <h10 class="mbr-text mbr-fonts-style display-7">글번호:&nbsp;${recipe.no}</h10>
@@ -130,12 +137,19 @@
                <div class="card p-3 col-12 col-md-6 col-lg-4">
                   <div class="card-wrapper">
                      <div class="card-img">
-                        <a
-                           href="${pageContext.request.contextPath}/recipe/readPage${pagingMaker.makeFind(pagingMaker.cri.page)}&no=${recipe.no}&userNo=${userVO.no}&click=1">
-                           <img
-                           src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg"
-                           alt="Mobirise" title="">
-                        </a>
+                     	<c:choose>
+	                     	<c:when test="${empty userVO }">
+	                     		<a href="${pageContext.request.contextPath}/login">
+	                			<img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="">
+	                     		</a>
+	                     	</c:when>
+                     	<c:otherwise>
+	                        <a
+	                           href="${pageContext.request.contextPath}/recipe/readPage${pagingMaker.makeFind(pagingMaker.cri.page)}&no=${recipe.no}&userNo=${userVO.no}&click=1">
+	                           <img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="">
+	                        </a>
+                        </c:otherwise>
+                        </c:choose>
                      </div>
                      <div class="card-box">
                         <h10 class="mbr-text mbr-fonts-style display-7">글번호:&nbsp;${recipe.no}</h10>
@@ -182,6 +196,14 @@
    </section>
    
 	 <script type="text/javascript">
+	 		function AfterLogin(){
+	 			if(confirm("로그인후 사용가능합니다.로그인창으로 이동하시겠습니까?"){
+	 				location.href="${pageContext.request.contextPath}/login";
+	 				retrun true;
+	 			}else{
+	 				return false;
+	 			});
+	 		}
 	 
 	      	$(document).ready(function(){
 	      		$('#findBtn').on("click",function(e){

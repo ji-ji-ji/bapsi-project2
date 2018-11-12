@@ -336,7 +336,7 @@
                         </div>
                         <div class="card-text">
                             <h3 class="count pt-3 pb-3 mbr-fonts-style display-2">
-                                  300
+                                 ${pagingMaker2.totalData}
                             </h3>
                             <h4 class="mbr-content-title mbr-bold mbr-fonts-style display-7">
                                 회원수</h4>
