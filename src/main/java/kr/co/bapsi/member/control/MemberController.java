@@ -1,20 +1,31 @@
 package kr.co.bapsi.member.control;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.google.api.Google;
+import org.springframework.social.google.api.impl.GoogleTemplate;
+import org.springframework.social.google.api.plus.Person;
+import org.springframework.social.google.api.plus.PlusOperations;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
+import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.GrantType;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
@@ -29,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 
 import kr.co.bapsi.mail.Email;
@@ -38,7 +50,6 @@ import kr.co.bapsi.member.vo.FindCriteria;
 import kr.co.bapsi.member.vo.MemberVO;
 import kr.co.bapsi.member.vo.PagingMaker;
 import kr.co.bapsi.upload.vo.UploadVO;
-
 @Controller
 public class MemberController {
 
@@ -76,6 +87,7 @@ public class MemberController {
 
 	@Inject
 	private MemberService memberService;
+	private OAuth2Operations oauthOperations;
 
 // *******************회원가입 **************************
 	// 회원가입
@@ -332,69 +344,122 @@ public class MemberController {
 	// 검색기능 구현
 
 // **********************************************************
-
 	// ************************ 로그인 *******************************
-	
 
-	// 네이버 로그인 api+구글로그인
-	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
-	public String login(Model model, HttpSession session) {
-		/* 네이버아이디로 인증 URL을 생성하기 위하여 naverLoginBO클래스의 getAuthorizationUrl메소드 호출 */
-		String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
-		// https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=sE***************&
-		// redirect_uri=http%3A%2F%2F211.63.89.90%3A8090%2Flogin_project%2Fcallback&state=e68c269c-5ba9-4c31-85da-54c16c658125
-		System.out.println("네이버:" + naverAuthUrl);
-		// 네이버
-		model.addAttribute("url", naverAuthUrl);
-		// *************************임지영1 구글로그인********************************
-		// 구글 추가 !!!!
-		// url값을 넘겨주는 것,
-		OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
-		String googleUrl = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);
-		System.out.println("구글:" + googleUrl);
-		model.addAttribute("google_url", googleUrl);
-		return "jsp/login/login";
-	}
-	// *************************임지영1 구글로그인 수정*******************************
-	@RequestMapping(value="googleLogin", method = { RequestMethod.GET})
-	public String googleLogin(Model model)throws Exception{
-		OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
-		String googleUrl = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);
-		System.out.println("구글:" + googleUrl);
-		model.addAttribute("google_url", googleUrl);
-		
-		System.out.println("나는 구글로그인의 구글:" );
-		System.out.println(model);
-		return "jsp/login/googleLogin";
-	}
+		// 네이버 로그인 api+구글로그인+카카오 로그인
+		@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
+		public String login(Model model, HttpSession session) {
+			/* 네이버아이디로 인증 URL을 생성하기 위하여 naverLoginBO클래스의 getAuthorizationUrl메소드 호출 */
+			String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
+			// https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=sE***************&
+			// redirect_uri=http%3A%2F%2F211.63.89.90%3A8090%2Flogin_project%2Fcallback&state=e68c269c-5ba9-4c31-85da-54c16c658125
+			System.out.println("네이버:" + naverAuthUrl);
+			// 네이버
+			model.addAttribute("url", naverAuthUrl);
+			// 구글 추가 !!!!
+			// url값을 넘겨주는 것,
+			OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
+			String googleUrl = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);
+			System.out.println("구글:" + googleUrl);
+			model.addAttribute("google_url", googleUrl);
+			// 카카오 url 값 넘겨주는 것 추가 !!
+			String kakaoUrl = "";
+			System.out.println(kakaoUrl);
+			model.addAttribute("kakao_url", kakaoUrl);
+			return "jsp/login/login";
+		}
+		// *************************임지영1 카카오 로그인********************************
 
-	@SuppressWarnings("unused")
-	@RequestMapping(value = "/googleSuccess", method = { RequestMethod.GET, RequestMethod.POST })
-	public String googleCallback(String gname, String gemail, HttpServletResponse response, HttpSession session)
-			throws Exception {
-		System.out.println("google name:" + gname);
-		System.out.println("google email:" + gemail);
-		MemberVO mvo = new MemberVO();
-		mvo.setEmail(gemail);
-		mvo.setName(gname);
-		if (mvo == null) {
-			return "jsp/login/googleFail";
-		} else {
-			System.out.println(mvo);
-			int checkNum = memberService.checkGoogleLogin(mvo);
-			if (checkNum == 0) {
-				System.out.println("checkNum 이 0일 때 " + mvo);
-				memberService.joinGoogle(mvo);
-				session.setAttribute("userVO", mvo);
-			} else {
-				System.out.println("checkNum 이 1일 때 " + mvo);
-				session.setAttribute("userVO", mvo);
-			}
+		@RequestMapping(value = "/kakaoCallback", produces = "application/json", method = { RequestMethod.GET,
+				RequestMethod.POST })
+		public String kakaoCallback(@RequestParam("code") String code, HttpServletRequest request,
+				HttpServletResponse response, HttpSession session) throws Exception {
 
-			return "jsp/login/googleSuccess";
+			return "jsp/login/kakaoCallback";
 		}
 
-	}
+		// *************************임지영1 구글로그인********************************
+		@SuppressWarnings("unused")
+		@RequestMapping(value = "/googleCallback", method = { RequestMethod.GET, RequestMethod.POST })
+		public String googleCallback(HttpServletRequest request, Model model, HttpSession session) throws Exception {
+			String code = request.getParameter("code");
+			oauthOperations = googleConnectionFactory.getOAuthOperations();
+			AccessGrant accessGrant = oauthOperations.exchangeForAccess(code, googleOAuth2Parameters.getRedirectUri(),
+					null);
+			String accessToken = accessGrant.getAccessToken();
+			Long expireTime = accessGrant.getExpireTime();
+			System.out.println("나는 구글 콜백이다. accessToken" + accessToken);
+			if (expireTime != null && expireTime < System.currentTimeMillis()) {
+				accessToken = accessGrant.getRefreshToken();
+				System.out.printf("액세스토큰 = {}", accessToken);
+
+			}
+
+			Connection<Google> connection = googleConnectionFactory.createConnection(accessGrant);
+			System.out.println("구글 커넷견 성공");
+			Google google = connection == null ? new GoogleTemplate(accessToken) : connection.getApi();
+			System.out.println(connection);
+			System.out.println("구글 커넷견 성공222");
+			PlusOperations plusOperations = google.plusOperations();
+			Person person = plusOperations.getGoogleProfile();
+			String nickname = person.getDisplayName();
+			String name = person.getDisplayName();
+			String email = person.getAccountEmail();
+			String socialLogin = "1";
+			MemberVO socialMember = new MemberVO();
+			int num = random.nextInt(89999999) + 10000000;
+			String password = "google" + Integer.toString(num);
+			socialMember.setPassword(password);
+			socialMember.setEmail(email);
+			socialMember.setName(name);
+			socialMember.setNickname(nickname);
+			socialMember.setSocialLogin(socialLogin);
+
+			if (socialMember == null) {
+				return "jsp/login/googleFail";
+			} else {
+				System.out.println(socialMember);
+				int checkNum = memberService.checkGoogleLogin(socialMember);
+				if (checkNum == 0) {
+					System.out.println("checkNum 이 0일 때 " + socialMember);
+					int checkGoogle = memberService.checkGoogleLogin(socialMember);
+					System.out.println(checkGoogle+"체크구글");
+					if (checkGoogle != 0) {
+						session.setAttribute("userVO", socialMember);
+					} else {
+						memberService.joinGoogle(socialMember);
+						session.setAttribute("userVO", socialMember);
+					}
+				} else {
+					System.out.println("checkNum 이 1일 때 " + socialMember);
+					session.setAttribute("userVO", socialMember);
+				}
+
+				// Access Token 취소
+
+				try {
+					System.out.println("Closing Token....");
+					String revokeUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken + "";
+					URL url = new URL(revokeUrl);
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("GET");
+					conn.setDoOutput(true);
+
+					BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+					String inputLine;
+					StringBuffer response = new StringBuffer();
+					while ((inputLine = in.readLine()) != null) {
+						response.append(inputLine);
+					}
+
+					in.close();
+				} catch (Exception e) {
+
+					e.printStackTrace();
+				}
+				return "jsp/login/googleCallback";
+			}
+		}
 
 	// 로그인 콜백
 	@SuppressWarnings({ "unchecked", "unused" })

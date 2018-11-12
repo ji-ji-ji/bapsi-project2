@@ -36,9 +36,14 @@
   <script src="${pageContext.request.contextPath}/resources/css/assets/smoothscroll/smooth-scroll.js"></script>
   <script src="${pageContext.request.contextPath}/resources/css/assets/theme/js/script.js"></script>
   <script src="${pageContext.request.contextPath}/resources/css/assets/formoid/formoid.min.js"></script>
+
 <!-- 임지영구글로그인 -->
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+  <meta name="google-signin-client_id" content="1010391818469-985t9r244c2oqur0mroqu2m5mdt9el9q.apps.googleusercontent.com">
+<!--  임지영 카카오 로그인 -->
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
   <meta name="google-signin-client_id" content="1010391818469-ir3v0jfbb7aamt0u5j36pppmobug85me.apps.googleusercontent.com">
 <script type="text/javascript">
 function checkLoginStatus(){
@@ -160,17 +165,21 @@ function init(){
                 	<input type = "button" class="btn btn-secondary btn-form display-4" style="width:100%; padding-left:31px; padding-right:31px; border-radius: 100px;" id="join" value = "회원가입">
                 </span>
                  <br>
-		            <!-- 네이버 로그인 화면으로 이동 시키는 URL -->
+		           <!-- 네이버 로그인 화면으로 이동 시키는 URL -->
 		            <!-- 네이버 로그인 화면에서 ID, PW를 올바르게 입력하면 callback 메소드 실행 요청 -->
-					
+					 
 					<a  href="${url}">
-					<button type="button" class="btn btn-light" style="width: 100%; background-color: #38CD25; border-color: #38CD25;color: white;">네이버 로그인</button>
+					<button type="button" class="btn btn-light" style="width: 100%; background-color: #38CD25; border-color: #38CD25;color: white; border-radius: 100px; cursor:pointer;">네이버 로그인</button>
 					</a>
 					
+					
 		            <a href="${google_url}">
-		            <button type="button" class="btn btn-light" style="width: 100%; color: #979996" onclick = "onSignIn">구글 로그인</button>
+		            <button type="button" class="btn btn-light" style="width: 100%; background-color:#5086EC; color:white; border-radius: 100px;border-width:0; cursor:pointer;" >구글 로그인</button>
 		           	</a>
 		           	
+		           	<a href="http://kauth.kakao.com/oauth/authorize?client_id={827dca2030d65cd46b4328d1351829c9}&redirect_uri={http://localhost:8000/bapsi/kakaoCallback}&response_type=code">
+		            <button type="button" id="kakao-login-btn" class="btn btn-light" style="width: 100%; background-color: #F7E405; border-width:0; border-radius: 100px; color: #54210F; cursor:pointer;" >카카오 로그인</button>
+		           	</a>
 		           	<!-- data-onsuccess="onSignIn" -->
 <%-- 		            <div id="naver_id_login" style="text-align:center"><a href="${url}"> --%>
 <!-- 		            <img width="223" src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png"/></a></div> -->

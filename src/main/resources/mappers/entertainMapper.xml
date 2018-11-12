@@ -76,6 +76,16 @@
   	from randomEat
   	where no = #{no}
   </select>
+  
+  <select id = "sort" parameterType="String" resultType="ingVO">
+     select name as ingName
+     from ingredients
+     where type = #{type}
+  </select>
+  
+   <select id = "typeList" parameterType="String" resultType="String">
+     select type from ingredients group by (type) order by min(no)
+  </select>
      
      
   </mapper>

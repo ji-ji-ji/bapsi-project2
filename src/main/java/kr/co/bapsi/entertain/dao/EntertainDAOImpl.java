@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import kr.co.bapsi.entertain.vo.FindCriteria;
 import kr.co.bapsi.entertain.vo.MukbangVO;
 import kr.co.bapsi.entertain.vo.RandomEatVO;
+import kr.co.bapsi.recipe.vo.IngVO;
 
 @Repository
 public class EntertainDAOImpl implements EntertainDAO{
@@ -33,6 +34,17 @@ public class EntertainDAOImpl implements EntertainDAO{
    public RandomEatVO randomEat(int no) throws Exception {
 	   
 	   return sqlSession.selectOne("randomEat", no);
+   }
+   
+   @Override
+   public List<IngVO> ingredients(String type) throws Exception {
+
+      return sqlSession.selectList("sort", type);
+   }
+
+   @Override
+   public List<String> selectTypeList() throws Exception {
+      return sqlSession.selectList("typeList");
    }
    
 }

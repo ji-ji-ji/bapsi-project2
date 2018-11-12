@@ -248,16 +248,14 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	//구글로그인,비밀번호 null 방지를 위해 가상 비밀번호 만들어주고 sociallogin 코드 넣어준다. 
-	@Override
-	public void joinGoogle(MemberVO memberVO) throws Exception {
-		String socialLogin = "socialLogin";
-		Random random = new Random();
-		int num = random.nextInt(89999) + 10000;
-		String password = "google"+Integer.toString(num);
-		memberVO.setPassword(password);
-		memberVO.setSocialLogin(socialLogin);
-		sqlSession.insert("joinGoogle", memberVO);
-		
-	}
+		@Override
+		public void joinGoogle(MemberVO memberVO) throws Exception {
+			Random random = new Random();
+			int num = random.nextInt(89999) + 10000;
+			String password = "google"+Integer.toString(num);
+			memberVO.setPassword(password);
+			sqlSession.insert("joinGoogle", memberVO);
+			
+		}
 
 }

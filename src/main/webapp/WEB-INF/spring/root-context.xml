@@ -67,13 +67,13 @@
 	</bean>
 	<bean id="emailSender" class="kr.co.bapsi.mail.EmailSender">
 	</bean>
-		<!-- google Class Bean설정 추가 -->
+<!-- google Class Bean설정 추가 -->
 	<!-- 클라이언트ID와 보안비밀 세팅 -->
 	<bean id="googleConnectionFactory"
 	  class="org.springframework.social.google.connect.GoogleConnectionFactory">
 	  <constructor-arg
-	    value="1010391818469-ir3v0jfbb7aamt0u5j36pppmobug85me.apps.googleusercontent.com" />
-	  <constructor-arg value="diFJbV7UOhjL2Vr5GZrPVSB7" />
+	    value="1010391818469-985t9r244c2oqur0mroqu2m5mdt9el9q.apps.googleusercontent.com" />
+	  <constructor-arg value="BTJxbVQprE4fCn_KTYWVJXEA" />
 	</bean>
 	<!-- 승인된 자바스크립트 원본과 승인된 리디렉션 URI -->
 	<bean id="googleOAuth2Parameters"
@@ -81,9 +81,9 @@
 	  <property name="scope"
 	    value="https://www.googleapis.com/auth/plus.login" />
 	  <property name="redirectUri"
-	    value="http://localhost:8000/bapsi/googleSuccess" />
+	    value="http://localhost:8000/bapsi/googleCallback" />
 	</bean>
-  
+
   
       <context:component-scan base-package="kr.co.bapsi.member.dao"/>
       <context:component-scan base-package="kr.co.bapsi.service"/>  

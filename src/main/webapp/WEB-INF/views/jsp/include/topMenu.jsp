@@ -43,89 +43,89 @@
 <script src="${pageContext.request.contextPath}/resources/css/assets/dropdown/js/ddmenu.js"></script>
 
 <style>
-	
-	@media ( min-width :576px) {
-		#extra {
-			max-width: 920px;
-			margin: 1.75rem auto
-		}
-		.modal-dialog-centered {
-			min-height: calc(100% - ( 1.75rem * 2))
-		}
-		.modal-sm {
-			max-width: 300px
-		}
-	}
-	
-	@media ( min-width :576px) {
-		.whatIngredient {
-			width:458px;
-		}
-	}
-	
-	
-	.inner > li {
-		padding:0;
-	}
-	
-	.field1 {
-		float:left;
-	}
-	
-	.field1 > ul {
-		border : 1px solid #a73f40;
-		background-attachment: scroll;
-		height:270px;
-		overflow-x:hidden;
-		overflow-y:visible;
-		list-style:none;
-		float:left;
-	}
-	
-	.big_wrap {
-		width:190px;
-		padding:0;
-		margin-right:9px;
-	}
-	
-	.big_wrap > li {
-		font-size:15px;
-		border-bottom:1px solid #dddddd;
-		padding-left:18px;
-		cursor:pointer;
-		
-	}
-	
-	.big_wrap > li > a {
-		line-height:44px;
-		color:#565656;
-	}
-	
-	.IngredientSearch {
-		
-		margin-bottom : 9px;
-	}
-	
-	.small_wrap {
-		width:396px;
-		padding:0;
-		margin-right:9px;
-		box-sizing:border-box;
-	}
-	
-	.small_wrap > li {
-		font-size:15px;
-		border-bottom:1px solid #dddddd;
-		padding-left:18px;
-		cursor:pointer;
-	}
-	
-	.small_wrap > li > a {
-		line-height:44px;
-		color:#565656;
-	}
-	
-	.whatIngredient{
+   
+   @media ( min-width :576px) {
+      #extra {
+         max-width: 920px;
+         margin: 1.75rem auto
+      }
+      .modal-dialog-centered {
+         min-height: calc(100% - ( 1.75rem * 2))
+      }
+      .modal-sm {
+         max-width: 300px
+      }
+   }
+   
+   @media ( min-width :576px) {
+      .whatIngredient {
+         width:458px;
+      }
+   }
+   
+   
+   .inner > li {
+      padding:0;
+   }
+   
+   .field1 {
+      float:left;
+   }
+   
+   .field1 > ul {
+      border : 1px solid #a73f40;
+      background-attachment: scroll;
+      height:270px;
+      overflow-x:hidden;
+      overflow-y:visible;
+      list-style:none;
+      float:left;
+   }
+   
+   .big_wrap {
+      width:190px;
+      padding:0;
+      margin-right:9px;
+   }
+   
+   .big_wrap > li {
+      font-size:15px;
+      border-bottom:1px solid #dddddd;
+      padding-left:18px;
+      cursor:pointer;
+      
+   }
+   
+   .big_wrap > li > a {
+      line-height:44px;
+      color:#565656;
+   }
+   
+   .IngredientSearch {
+      
+      margin-bottom : 9px;
+   }
+   
+   .small_wrap {
+      width:396px;
+      padding:0;
+      margin-right:9px;
+      box-sizing:border-box;
+   }
+   
+   .small_wrap > li {
+      font-size:15px;
+      border-bottom:1px solid #dddddd;
+      padding-left:18px;
+      cursor:pointer;
+   }
+   
+   .small_wrap > li > a {
+      line-height:44px;
+      color:#565656;
+   }
+   
+   .whatIngredient{
         background-color: #f5f5f5; 
         line-height: 1.43; 
         padding: 1.07em .5em; 
@@ -148,63 +148,63 @@
      }
      
      .field2 {
-     	width:280px;
-     	float:right;
+        width:280px;
+        float:right;
      }
      
      .field2 > dl {
-     	border:1px solid #a73f40;
-     	background:#fff;
-     	position:relative;
-     	
+        border:1px solid #a73f40;
+        background:#fff;
+        position:relative;
+        
      }
      
      .field2 > dl > dt {
-     	height:59px;
-     	color:#565656;
-     	font-size:20px;
-     	padding:10px 15px;
-     	box-sizing:border-box;
-     	border-bottom:1px solid #dddddd;
-     	text-align: center;
+        height:59px;
+        color:#565656;
+        font-size:20px;
+        padding:10px 15px;
+        box-sizing:border-box;
+        border-bottom:1px solid #dddddd;
+        text-align: center;
      }
      
      .field2 > dl > dd {
-     	height:268px;
-     	box-sizing : border-box;
+        height:268px;
+        box-sizing : border-box;
      }
      
      .field2 > dl > dd > ul {
-     	list-style:none;
-     	height:205px;
-     	padding:12px 0;
-     	overflow-x:hidden;
-     	overflow-y:visible;
-     	box-sizing:border-box;
+        list-style:none;
+        height:205px;
+        padding:12px 0;
+        overflow-x:hidden;
+        overflow-y:visible;
+        box-sizing:border-box;
      }
      
      .field2 > dl > dd > ul > li.no_Ingredients {
-     	float:none;
-     	font-size:17px;
-     	color:#b7b7b7;
-     	text-align:center;
-     	margin-top:80px;
-     	padding:0;
+        float:none;
+        font-size:17px;
+        color:#b7b7b7;
+        text-align:center;
+        margin-top:80px;
+        padding:0;
      }
      
      .field2 > dl > dd > .btn {
-     	position:absolute;
-     	left:0;
-     	right:0;
-     	bottom:0;
-     	padding:12px 16px;
-     	background-color:#fff;
+        position:absolute;
+        left:0;
+        right:0;
+        bottom:0;
+        padding:12px 16px;
+        background-color:#fff;
      }
      
      .field2 > dl > dd > .btn > button {
-     	width:194px;
-     	height:48px;
-     	background-color: #c12048 !important;
+        width:194px;
+        height:48px;
+        background-color: #c12048 !important;
         border-color: #c12048 !important; 
         color: #ffffff !important;
         line-height: 1.43;
@@ -215,29 +215,71 @@
      }
      
     #head {
-		display: inline;
-		text-align:center;
-		-webkit-box-align: start;
-		-ms-flex-align: start;
-		align-items: flex-start;
-		-webkit-box-pack: justify;
-		-ms-flex-pack: justify;
-		justify-content: space-between;
-		padding: 1rem;
-		border-bottom: 1px solid #e9ecef;
-		border-top-left-radius: .3rem;
-		border-top-right-radius: .3rem
-	}
+      display: inline;
+      text-align:center;
+      -webkit-box-align: start;
+      -ms-flex-align: start;
+      align-items: flex-start;
+      -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid #e9ecef;
+      border-top-left-radius: .3rem;
+      border-top-right-radius: .3rem
+   }
      
 </style>
 
 <script>
-		$(document).ready(function(){
-			$('.messi').click(function(){
-				var kkk = ('.messi').val();
-				console.log(kkk);
-			});
-		});
+      $(function(){
+         $.ajax({
+            url:"${pageContext.request.contextPath}/messiType",
+            method:"get",
+            success:function(typeList){
+               var typeInsert = "";
+               $.each(typeList, function(i, type){
+                  typeInsert += '<li><a class="messiType" href="#">'+type+'</a></li>';
+               })
+               $("#big_wrap").html(typeInsert);
+               
+               $('.messiType').bind('click', function(){
+                  $.ajax({
+                     url:"${pageContext.request.contextPath}/messi",
+                     data:{"Sort":$(this).text()},
+                     method:"get",
+                     success:function(ingList){
+                        var ingInsert = "";
+                        $.each(ingList, function(i, ingVO){
+                            ingInsert += '<li><a class="" href="">'+ingVO['ingName']+'</a></li>';
+                        })
+                        $("#small_wrap").html(ingInsert);
+                        
+                     }
+                  })
+               });
+            }
+         })
+      })
+
+//       function thisSort(i){
+//          alert(i);
+// //          location.href = "${pageContext.request.contextPath}/messi?Sort="+i;
+//          $.ajax({
+//             url:"${pageContext.request.contextPath}/messi",
+//             data:{"Sort":i},
+//             method:"get",
+//             success:function(ingList){
+//                var ingInsert = "";
+//                $.each(ingList, function(i, ingVO){
+//                    ingInsert += '<li><a class="" href="">'+ingVO['ingName']+'</a></li>';
+//                })$("#small_wrap").html(ingInsert);
+//             }
+//          })
+         
+//       } 
+      
+
 </script>
 
 
@@ -250,71 +292,55 @@
       <div class="modal-header" id = "head"><h2 style="color:#c12048;">내가 가진 재료로 레시피 추천받자!</h2></div>
       <div class="modal-body">
       <section class="recomand">
-      	<div class="inner">
-      		<form class="mbr-form" action="" method="get" data-form-title="Mobirise Form">
-        		<fieldset class="field1">
-        			<div class="IngredientSearch">
-						<input  class="whatIngredient" type="text" name="" id="thisIngredients" value="" placeholder = "재료명으로 검색해보세요"/>
-        				<button class="search2" id="">검색</button>
-        			</div>
-		     <ul class="big_wrap">
-		        <li><a class="messi" href="${pageContext.request.contextPath}/messi">곡류</a></li>
-		        <li><a class="" href="">면/만두류</a></li>
-		        <li><a class="" href="">빵류</a></li>
-		        <li><a class="" href="">과자류</a></li>
-		        <li><a class="" href="">떡류</a></li>
-		        <li><a class="" href="">감자/고구마류</a></li>
-		        <li><a class="" href="">묵/두부</a></li>
-		        <li><a class="" href="">콩/견과류</a></li>
-		        <li><a class="" href="">채소류</a></li>
-		        <li><a class="" href="">과일류</a></li>
-		        <li><a class="" href="">고기류</a></li>
-		        <li><a class="" href="">햄/소시지</a></li>
-		        <li><a class="" href="">계란류</a></li>
-		        <li><a class="" href="">어패류</a></li>
-		        <li><a class="" href="">해조류</a></li>
-		        <li><a class="" href="">유제품/치즈류</a></li>
-		        <li><a class="" href="">양념류</a></li>
-		        <li><a class="" href="">초콜렛/사탕</a></li>
-		        <li><a class="" href="">음료/주류</a></li>
-		     </ul>
-		        			
-		     <ul class="small_wrap">
-		        <li><a class="" href="">귀리</a></li>
-		        <li><a class="" href="">귀리가루</a></li>
-		        <li><a class="" href="">누룽지</a></li>
-		        <li><a class="" href="">머핀믹스</a></li>
-		        <li><a class="" href="">메밀가루</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-		        <li><a class="" href="">곡류</a></li>
-	        </ul>
-        			</fieldset>
-        			
+         <div class="inner">
+            <form class="mbr-form" action="" method="get" data-form-title="Mobirise Form">
+              <fieldset class="field1">
+                 <div class="IngredientSearch">
+                  <input  class="whatIngredient" type="text" name="" id="thisIngredients" value="" placeholder = "재료명으로 검색해보세요"/>
+                    <button class="search2" id="">검색</button>
+                 </div>
+           <ul class="big_wrap" id="big_wrap">
+<!--               <li><a class="messi" href="javascript:void(0)" onclick="thisSort('곡류');">곡류</a></li> -->
+<!--               <li><a class="messi" href="javascript:void(0)" onclick="thisSort('면/만두류');">면/만두류</a></li> -->
+<!--               <li><a class="messi" href="">빵류</a></li> -->
+<!--               <li><a class="messi" href="">과자류</a></li> -->
+<!--               <li><a class="messi" href="">떡류</a></li> -->
+<!--               <li><a class="" href="">감자/고구마류</a></li> -->
+<!--               <li><a class="" href="">묵/두부</a></li> -->
+<!--               <li><a class="" href="">콩/견과류</a></li> -->
+<!--               <li><a class="" href="">채소류</a></li> -->
+<!--               <li><a class="" href="">과일류</a></li> -->
+<!--               <li><a class="" href="">고기류</a></li> -->
+<!--               <li><a class="" href="">햄/소시지</a></li> -->
+<!--               <li><a class="" href="">계란류</a></li> -->
+<!--               <li><a class="" href="">어패류</a></li> -->
+<!--               <li><a class="" href="">해조류</a></li> -->
+<!--               <li><a class="" href="">유제품/치즈류</a></li> -->
+<!--               <li><a class="" href="">양념류</a></li> -->
+<!--               <li><a class="" href="">초콜렛/사탕</a></li> -->
+<!--               <li><a class="" href="">음료/주류</a></li> -->
+           </ul>
+                       
+           <ul class="small_wrap" id="small_wrap">
+<%--            <c:forEach var = "ingVO" items="${ingVO}" varStatus="loop"> --%>
+<%--               <li><a class="" href="">${ingVO.ingName}</a></li> --%>
+<%--            </c:forEach> --%>
+           </ul>
+                 </fieldset>
+                 
        <fieldset class="field2">
         <dl>
-        	<dt>
-        		<h3>내가 선택한 재료</h3>
-        	</dt>
-        	<dd>
-        		<ul>
-        			<li class="no_Ingredients">재료를 선택해주세요.</li>
-        		</ul>
-        		<div class = "btn">
-        			<button type="submit">이 재료로 추천받기</button>
-        		</div>
-        	</dd>
+           <dt>
+              <h3>내가 선택한 재료</h3>
+           </dt>
+           <dd>
+              <ul>
+                 <li class="no_Ingredients">재료를 선택해주세요.</li>
+              </ul>
+              <div class = "btn">
+                 <button type="submit">이 재료로 추천받기</button>
+              </div>
+           </dd>
         </dl>
        </fieldset>
      </form>
@@ -371,24 +397,33 @@
                   data-toggle="dropdown-submenu" aria-expanded="true"><span
                      class="mbri-users mbr-iconfont mbr-iconfont-btn"></span></a>
                   <div class="dropdown-menu">
-                     <c:choose>
-                        <c:when test="${empty userVO}">
-                           <a class="text-black dropdown-item display-5"
-                              href="${pageContext.request.contextPath}/login">로그인</a>
-                        </c:when>
-                        <c:otherwise>
-                           <a class="text-black dropdown-item display-5"
-                              href="${pageContext.request.contextPath}/logout">로그아웃</a>
-                           <a class="text-black dropdown-item display-5"
-                              href="${pageContext.request.contextPath}/mypage"
-                              aria-expanded="false">마이페이지</a>
-                        </c:otherwise>
-                     </c:choose>
-                     <c:if test="${userVO.type == 'S'}">
-                        <a class="text-black dropdown-item display-5"
-                           href="${pageContext.request.contextPath}/list"
-                           aria-expanded="false">회원목록</a>
-                     </c:if>
+							<c:choose>
+								<c:when test="${empty userVO}">
+									<a class="text-black dropdown-item display-5"
+										href="${pageContext.request.contextPath}/login">로그인</a>
+								</c:when>
+								<c:when test="${0 ne userVO.socialLogin}">
+									<a class="text-black dropdown-item display-5"
+										href="${pageContext.request.contextPath}/logout">로그아웃</a>
+									<!--                               href="#" onclick='signOut()'>로그아웃</a> -->
+									<a class="text-black dropdown-item display-5"
+										href="${pageContext.request.contextPath}/mypageS"
+										aria-expanded="false">마이페이지</a>
+								</c:when>
+								<c:otherwise>
+									<a class="text-black dropdown-item display-5"
+										href="${pageContext.request.contextPath}/logout">로그아웃</a>
+									<!--                               href="#" onclick='signOut()'>로그아웃</a> -->
+									<a class="text-black dropdown-item display-5"
+										href="${pageContext.request.contextPath}/mypage"
+										aria-expanded="false">마이페이지</a>
+								</c:otherwise>
+							</c:choose>
+							<c:if test="${userVO.type == 'S'}">
+								<a class="text-black dropdown-item display-5"
+									href="${pageContext.request.contextPath}/list"
+									aria-expanded="false">회원목록</a>
+							</c:if>
                   </div></li>
             </ul>
 

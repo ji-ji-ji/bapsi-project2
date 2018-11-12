@@ -281,16 +281,16 @@
 	where email=#{email} and password = #{password}
 	</select>
 	
- <!--*********************구글정보있으면 가입, 정보없으면 로그인************************************ -->    
+<!--*********************구글정보있으면 가입, 정보없으면 로그인************************************ -->    
  	<select id="checkJoinGoogle" parameterType="MemberVO" resultType="Integer">
  	select count(*)
  	from ruser
- 	where email=#{email} and name=#{name} and social_login='socialLogin'
+ 	where email=#{email} and name=#{name} and social_login='1'
  	</select>
  	
  	<insert id="joinGoogle" parameterType="MemberVO">
-	 insert into ruser(no, email, name, nickname, social_login)
-	values(ruser_seq.nextval, #{email}, #{name}, #{name}, #{socialLogin})
+	 insert into ruser(no, email, password, name, nickname, social_login)
+	values(ruser_seq.nextval, #{email}, #{password}, #{name}, #{nickname}, #{socialLogin})
  	</insert>
      
      
