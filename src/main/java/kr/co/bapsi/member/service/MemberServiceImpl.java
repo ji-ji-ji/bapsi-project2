@@ -50,11 +50,17 @@ public class MemberServiceImpl implements MemberService {
 
 		return memberDAO.myPage(no);
 	}
+	
+	//로그인 마이페이지
+	@Override
+	public MemberVO loginMyPage(String email) throws Exception{
+		return memberDAO.loginMyPage(email);
+	}
 
 	@Override
-	public UploadVO myPagefile(int no) throws Exception {
+	public UploadVO myPagefile(int userNo) throws Exception {
 
-		return memberDAO.myPagefile(no);
+		return memberDAO.myPagefile(userNo);
 	}
 
 	// 회원정보 상세보기
@@ -74,9 +80,9 @@ public class MemberServiceImpl implements MemberService {
 	
 	// 회원탈퇴시 프로필 삭제
 	@Override
-	public void profileDelete(int no) throws Exception {
+	public void profileDelete(int userNo) throws Exception {
 		
-		memberDAO.profileDelete(no);
+		memberDAO.profileDelete(userNo);
 	}
 	
 //*****************************************************	
@@ -145,6 +151,10 @@ public class MemberServiceImpl implements MemberService {
 
 		return memberDAO.loginCheck(member);
 	}
+	@Override
+	public MemberVO apiMemSelect(String email) throws Exception {
+		return memberDAO.apiMemSelect(email);
+	}
 
 	// 네이버 회원목록 관련 메소드
 	@Override
@@ -189,6 +199,12 @@ public class MemberServiceImpl implements MemberService {
 	public void joinGoogle(MemberVO memberVO) throws Exception {
 		memberDAO.joinGoogle(memberVO);
 		
+	}
+	
+	@Override
+	public MemberVO googleSelect(String email) throws Exception {
+		
+		return memberDAO.googleSelect(email);
 	}
 
 }

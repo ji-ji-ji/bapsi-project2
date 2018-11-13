@@ -46,7 +46,7 @@
               from rcomments r, ruser u
                 where  r.login_user_no = u.no
                 and recipe_no = #{recipeNo}
-              order by no asc) A      
+              order by no desc) A      
           where rownum <= #{pCri.startPage}+(#{pCri.numPerPage}-1)) X
       where X.rnum >= #{pCri.startPage}
    ]]>

@@ -36,7 +36,7 @@ public class UploadController {
       
          UploadVO upload = new UploadVO();
          MemberVO authUser = (MemberVO)session.getAttribute("userVO");
-        		 
+               
          System.out.println("파일 이름 : " + file.getOriginalFilename());
          System.out.println("퍼일 크기 : " + file.getSize());
          System.out.println("컨텐트 타입 : " + file.getContentType());
@@ -87,7 +87,7 @@ public class UploadController {
     @RequestMapping(value="/fileDelete")
     public String fileDelete(UploadVO upload, HttpSession session) {
        
-    	MemberVO authUser = (MemberVO)session.getAttribute("userVO"); 
+       MemberVO authUser = (MemberVO)session.getAttribute("userVO"); 
 
        upload = sqlSession.selectOne("profile",authUser.getNo());
        
@@ -120,8 +120,8 @@ public class UploadController {
     // 회원의 프로필 삭제
     @RequestMapping(value="/{no}/memberFileDelete")
     public String memberFileDelete(@PathVariable("no")int no, UploadVO upload, HttpSession session) {
-    	
-    	upload = sqlSession.selectOne("profile",no);
+       
+       upload = sqlSession.selectOne("profile",no);
         
         System.out.println("파일 fakename : " + upload.getFile_fakename());
         
@@ -142,7 +142,7 @@ public class UploadController {
            
         sqlSession.delete("memberDeleteProfile", no);
 
-    	
-    	return "jsp/admin/memberFileOut";
+       
+       return "jsp/admin/memberFileOut";
     }
 }

@@ -407,7 +407,7 @@
 										href="${pageContext.request.contextPath}/logout">로그아웃</a>
 									<!--                               href="#" onclick='signOut()'>로그아웃</a> -->
 									<a class="text-black dropdown-item display-5"
-										href="${pageContext.request.contextPath}/mypageS"
+										href="${pageContext.request.contextPath}/mypage"
 										aria-expanded="false">마이페이지</a>
 								</c:when>
 								<c:otherwise>

@@ -204,5 +204,12 @@ public class RecipeServiceImpl implements RecipeService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	//뷰카운트 전체조회
+	@Override
+	public int viewCnt() {
+		
+		return recipeDao.viewCnt();
+	}
 
 }

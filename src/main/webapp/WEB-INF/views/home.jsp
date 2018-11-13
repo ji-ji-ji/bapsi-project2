@@ -304,10 +304,10 @@
 
                         <div class="card-text">
                             <h3 class="count pt-3 pb-3 mbr-fonts-style display-2">
-                                  500</h3>
-                            <h4 class="mbr-content-title mbr-bold mbr-fonts-style display-7">페이지 방문한 수</h4>
+                                  ${viewCnt}</h3>
+                            <h4 class="mbr-content-title mbr-bold mbr-fonts-style display-7">페이지 뷰 수</h4>
                             <p class="mbr-content-text mbr-fonts-style display-7">
-                                4
+                                
                             </p>
                         </div>
                     </div>
@@ -323,7 +323,7 @@
 								<h3 class="count pt-3 pb-3 mbr-fonts-style display-2">${pagingMaker.totalData}</h3>
 								<h4 class="mbr-content-title mbr-bold mbr-fonts-style display-7">
 									레시피 수</h4>
-								<p class="mbr-content-text mbr-fonts-style display-7">4</p>
+								<p class="mbr-content-text mbr-fonts-style display-7"></p>
 							</div>
 						</div>
 					</div>
@@ -341,7 +341,7 @@
                             <h4 class="mbr-content-title mbr-bold mbr-fonts-style display-7">
                                 회원수</h4>
                             <p class="mbr-content-text mbr-fonts-style display-7">
-                                    4
+                                    
                             </p>
                         </div>
                     </div>

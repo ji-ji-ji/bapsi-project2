@@ -127,6 +127,10 @@ public interface RecipeDAO {
 
    public List<RecipeVO> selectBestRecipe();
    
+   
+   //전체 뷰카운트DAO
+   public int viewCnt();
+   
 
    
    

@@ -7,27 +7,29 @@
   
   <mapper namespace="kr.co.bapsi.upload.controller.UploadController">
 
-
-	<insert id = "uploadProfile" parameterType = "MemberVO">
-   		insert into user_photo(no, user_no, file_oriname, file_fakename)
-   		values(user_photo_seq.nextval , #{userNo}, #{file_oriname}, #{file_fakename})
+   <!-- 업로드 누르면 넣음 -->
+   <insert id = "uploadProfile" parameterType = "MemberVO">
+         insert into user_photo(no, user_no, file_oriname, file_fakename)
+         values(user_photo_seq.nextval , #{userNo}, #{file_oriname}, #{file_fakename})
    </insert>
  
- 	<delete id = "deleteProfile" parameterType = "int">
- 		delete user_photo
- 		where no = #{userNo}
- 	</delete>
+    <!-- 프로필 삭제하면 db에서 삭제됨 -->
+    <delete id = "deleteProfile" parameterType = "int">
+       delete user_photo
+       where user_no = #{userNo}
+    </delete>
 
-	<delete id = "memberDeleteProfile" parameterType = "int">
- 		delete user_photo
- 		where no = #{userNo}
- 	</delete>
+   <!-- 관리자에서 프로필 삭제하게 -->
+   <delete id = "memberDeleteProfile" parameterType = "int">
+       delete user_photo
+       where user_no = #{userNo}
+    </delete>
 
-
-	<select id = "profile" parameterType = "int" resultType = "UploadVO">
-		select file_fakename
-		from user_photo
-		where no = #{userNo}
-	</select>
- 	
+   <!-- 마이페이지에서 프로필 보이게 -->
+   <select id = "profile" parameterType = "int" resultType = "UploadVO">
+      select file_fakename
+      from user_photo
+      where user_no = #{userNo}
+   </select>
+    
   </mapper>

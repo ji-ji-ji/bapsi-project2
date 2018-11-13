@@ -28,9 +28,12 @@ public interface MemberService {
 
 	// 마이페이지
 	public MemberVO myPage(int no) throws Exception;
+	
+	//로그인 마이페이지(로그인 api 마이페이지+ 기존 회원 마이페이지)
+	public MemberVO loginMyPage(String email) throws Exception;
 
-	// 마이페이지 파일
-	public UploadVO myPagefile(int no) throws Exception;
+	// 마이페이지 파일(로그인 api 파일+ 기존 회원 파일)
+	public UploadVO myPagefile(int userNo) throws Exception;
 
 	// 회원정보 수정
 	public void update(MemberVO member) throws Exception;
@@ -39,7 +42,7 @@ public interface MemberService {
 	public void selfDelete(int no) throws Exception;
 	
 	// 회원탈퇴때 프로필 삭제
-	public void profileDelete(int no) throws Exception;
+	public void profileDelete(int userNo) throws Exception;
 
 //********************************************************
 
@@ -78,7 +81,8 @@ public interface MemberService {
 //*************************로그인 서비스********************
 	// 로그인
 	public MemberVO loginCheck(MemberVO member) throws Exception;
-
+	// api 로그인 멤버 정보 조회
+	public MemberVO apiMemSelect(String email) throws Exception;
 	// 네이버 회원정보 가져오기
 	public void naverInsert(MemberVO mvo);
 
@@ -98,5 +102,7 @@ public interface MemberService {
 	// *****************구글 로그인************************************
 	public int  checkGoogleLogin(MemberVO memberVO) throws Exception;
 	public void joinGoogle(MemberVO memberVO) throws Exception;
+	public MemberVO googleSelect(String email) throws Exception;
+	
 
 }

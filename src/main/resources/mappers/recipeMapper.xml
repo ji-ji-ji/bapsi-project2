@@ -4,21 +4,21 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bapsi.recipe.dao.RecipeDAO">
 
-	<!-- 레시피 등록 -->
-	<insert id="insertRecipe" parameterType="recipeVO">
-		insert into recipeboard(no, user_no, title, sub_title, recipe_name, user_nickname, 
-		 time, cost, content, servings)
-		  values(recipeboard_seq.nextval, #{userNo}, #{title}, #{subTitle}, #{recipeName}, #{userNickName},
-		   #{time}, #{cost}, #{content}, #{servings})
-	</insert>
-	<insert id="insertRIngre" parameterType="map">
-		insert into recipe_ingredients(no,r_no, i_no, amount) 
-		  values(recipe_ingredients_seq.nextval,(select max(no) from recipeboard), #{ing}, #{amount})
-	</insert>
-	<insert id="insertRTag" parameterType="map">
+   <!-- 레시피 등록 -->
+   <insert id="insertRecipe" parameterType="recipeVO">
+      insert into recipeboard(no, user_no, title, sub_title, recipe_name, user_nickname, 
+       time, cost, content, servings)
+        values(recipeboard_seq.nextval, #{userNo}, #{title}, #{subTitle}, #{recipeName}, #{userNickName},
+         #{time}, #{cost}, #{content}, #{servings})
+   </insert>
+   <insert id="insertRIngre" parameterType="map">
+      insert into recipe_ingredients(no,r_no, i_no, amount) 
+        values(recipe_ingredients_seq.nextval,(select max(no) from recipeboard), #{ing}, #{amount})
+   </insert>
+   <insert id="insertRTag" parameterType="map">
       insert into recipe_tags(no,r_no, t_no) 
         values(recipe_tags_seq.nextval ,(select max(no) from recipeboard), #{tag})
-	</insert>
+   </insert>
 
    <select id="selectAllTag" resultType="tagVO">
       select no as tagNO, type tagType, name tagName from tags
@@ -28,60 +28,60 @@
       select no as ingNo, name ingName, type ingType from ingredients
        order by no
    </select>
-	
-	<!-- 레시피글 상세조회 -->
-	<select id="selectByNo" parameterType="int" resultType="recipeVO">
-		select no, user_no as userNo, title, sub_title as subTitle,
-		time, cost, content
-		, user_nickname as userNickName, recipe_name as
-		recipeName,
-		to_char(reg_date, 'yyyy-MM-dd') as regDate
-		, view_cnt as
-		viewCnt, servings
-		from recipeboard
-		where no = #{no}
-	</select>
-	<select id="selectTagByNo" parameterType="int"
-		resultType="tagVO">
-		select t.name as tagName, t.type as tagType, t.no as tagNo
-		from recipe_tags r, tags t, recipeboard b
-		where b.no = r.r_no
-		and t.no = r.t_no
-		and b.no = #{no}
-		order by t.no
-	</select>
-	<select id="selectIngByNo" parameterType="int"
-		resultType="ingVO">
-		select i.name as ingName, r.amount as amount, i.type as ingType, i.no as ingNo 
-		from recipeboard b, recipe_ingredients r, ingredients i
-		where b.no = r.r_no
-		and i.no = r.i_no
-		and b.no = #{no}
-		order by i.no
-	</select>
+   
+   <!-- 레시피글 상세조회 -->
+   <select id="selectByNo" parameterType="int" resultType="recipeVO">
+      select no, user_no as userNo, title, sub_title as subTitle,
+      time, cost, content
+      , user_nickname as userNickName, recipe_name as
+      recipeName,
+      to_char(reg_date, 'yyyy-MM-dd') as regDate
+      , view_cnt as
+      viewCnt, servings
+      from recipeboard
+      where no = #{no}
+   </select>
+   <select id="selectTagByNo" parameterType="int"
+      resultType="tagVO">
+      select t.name as tagName, t.type as tagType, t.no as tagNo
+      from recipe_tags r, tags t, recipeboard b
+      where b.no = r.r_no
+      and t.no = r.t_no
+      and b.no = #{no}
+      order by t.no
+   </select>
+   <select id="selectIngByNo" parameterType="int"
+      resultType="ingVO">
+      select i.name as ingName, r.amount as amount, i.type as ingType, i.no as ingNo 
+      from recipeboard b, recipe_ingredients r, ingredients i
+      where b.no = r.r_no
+      and i.no = r.i_no
+      and b.no = #{no}
+      order by i.no
+   </select>
 
-	<!-- 레시피 수정 -->
-	<update id="updateRecipe" parameterType="recipeVO">
-		update recipeboard set title=#{title}, sub_title=#{subTitle}, recipe_name=#{recipeName}, time=#{time},
-		 cost=#{cost}, content=#{content}, servings=#{servings}, reg_date=sysdate
-		where no=#{no}
-	</update>
-	<delete id="deleteRIng" parameterType="int">
-		delete from recipe_ingredients where r_no=#{no}
-	</delete>
-	<insert id="updateRIng" parameterType="map">
-		insert into recipe_ingredients(no,r_no, i_no, amount) 
-		  values(recipe_ingredients_seq.nextval,#{no}, #{ing}, #{amount})
-	</insert>
-	<delete id="deleteRTag" parameterType="int">
-		delete from recipe_tags where r_no=#{no}
-	</delete>
-	<insert id="updateRTag" parameterType="map">
-		insert into recipe_tags(no,r_no, t_no) 
-		  values(recipe_tags_seq.nextval,#{no}, #{tag})
-	</insert>
-	
-	  <!-- 페이징 -->
+   <!-- 레시피 수정 -->
+   <update id="updateRecipe" parameterType="recipeVO">
+      update recipeboard set title=#{title}, sub_title=#{subTitle}, recipe_name=#{recipeName}, time=#{time},
+       cost=#{cost}, content=#{content}, servings=#{servings}, reg_date=sysdate
+      where no=#{no}
+   </update>
+   <delete id="deleteRIng" parameterType="int">
+      delete from recipe_ingredients where r_no=#{no}
+   </delete>
+   <insert id="updateRIng" parameterType="map">
+      insert into recipe_ingredients(no,r_no, i_no, amount) 
+        values(recipe_ingredients_seq.nextval,#{no}, #{ing}, #{amount})
+   </insert>
+   <delete id="deleteRTag" parameterType="int">
+      delete from recipe_tags where r_no=#{no}
+   </delete>
+   <insert id="updateRTag" parameterType="map">
+      insert into recipe_tags(no,r_no, t_no) 
+        values(recipe_tags_seq.nextval,#{no}, #{tag})
+   </insert>
+   
+     <!-- 페이징 -->
    <select id="listPage" resultType="recipeVO">
       <![CDATA[
       select X.rnum, X.no, X.user_no as userNo, X.title, x.sub_title as subTitle, X.time, X.cost, X.content
@@ -142,35 +142,35 @@
 
  <!--    ★★★★★★★★★★★게시글 검색기능 구현 ★★★★★★★★★★★★★★★★  -->
   <sql id="findSQL">
-  	 <where>
-  		<if test="findType != null and findType =='S'.toString()">
-  			and title like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType =='C'.toString()">
-  			and content like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType=='W'.toString()">
-  			and user_nickname like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType=='F'.toString()">
-  			and recipe_name like '%'||#{keyword}||'%'
-  		</if>
-  	</where>  
+      <where>
+        <if test="findType != null and findType =='S'.toString()">
+           and title like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType =='C'.toString()">
+           and content like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType=='W'.toString()">
+           and user_nickname like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType=='F'.toString()">
+           and recipe_name like '%'||#{keyword}||'%'
+        </if>
+     </where>  
   </sql>
   
   <sql id="findTSQL">
-  		<if test="findType != null and findType =='S'.toString()">
-  			and b.title like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType =='C'.toString()">
-  			and b.content like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType=='W'.toString()">
-  			and b.user_nickname like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType=='F'.toString()">
-  			and b.recipe_name like '%'||#{keyword}||'%'
-  		</if> 
+        <if test="findType != null and findType =='S'.toString()">
+           and b.title like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType =='C'.toString()">
+           and b.content like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType=='W'.toString()">
+           and b.user_nickname like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType=='F'.toString()">
+           and b.recipe_name like '%'||#{keyword}||'%'
+        </if> 
   </sql>
   
   <!--게시글: 검색기능 구현  -->
@@ -190,15 +190,15 @@
               order by no desc) A      
           where rownum <= #{startPage}+(#{numPerPage}-1)) X
       where X.rnum >= #{startPage}
-		]]>		      
+      ]]>            
     </select>
     
   <!-- (데이터 수 검색)  -->
   <select id="findCountDataR" resultType="int">
-     	select count(*) 
-     	from recipeboard
+        select count(*) 
+        from recipeboard
      
-		<include refid="findSQL"></include>
+      <include refid="findSQL"></include>
   </select>
   
   <!-- 태그페이지 검색기능 -->
@@ -242,92 +242,92 @@
    </select>
    
  <!--************************포인트*********************************  -->    
-	<!-- 포인트 -->
-	<select id = "checkBoard" resultType="int">      
-	select count(*)
-	from(select user_no , type
-	from rpoint
-	where type = 'U'
-	and user_no = #{userNo} 
-	and receipe_no  = #{receipeNo})
-	</select>
-	
-	<select id = "checkBoardO" resultType="int">      
-	select count(*)
-	from(select user_no , type
-	from rpoint
-	where type = 'D'
-	and user_no = #{userNo} 
-	and receipe_no  = #{receipeNo})
-	</select>
-	
-	<update id="getRPoint">
-		update recipeboard 
-		set point = (point+1) 
-		where no = #{receipeNo}
-	</update>
-	
-	<update id="getMPoint">
-		update ruser
-		set point = (point+1) 
-		where no = #{receipeUserNo}
-	</update>
-	
-	<update id="loseRPoint">
-		update recipeboard 
-		set point = (point-1) 
-		where no = #{receipeNo}
-	</update>
-	
-	<update id="loseMPoint">
-		update ruser
-		set point = (point-1) 
-		where no = #{receipeUserNo}
-	</update>
+   <!-- 포인트 -->
+   <select id = "checkBoard" resultType="int">      
+   select count(*)
+   from(select user_no , type
+   from rpoint
+   where type = 'U'
+   and user_no = #{userNo} 
+   and receipe_no  = #{receipeNo})
+   </select>
+   
+   <select id = "checkBoardO" resultType="int">      
+   select count(*)
+   from(select user_no , type
+   from rpoint
+   where type = 'D'
+   and user_no = #{userNo} 
+   and receipe_no  = #{receipeNo})
+   </select>
+   
+   <update id="getRPoint">
+      update recipeboard 
+      set point = (point+1) 
+      where no = #{receipeNo}
+   </update>
+   
+   <update id="getMPoint">
+      update ruser
+      set point = (point+1) 
+      where no = #{receipeUserNo}
+   </update>
+   
+   <update id="loseRPoint">
+      update recipeboard 
+      set point = (point-1) 
+      where no = #{receipeNo}
+   </update>
+   
+   <update id="loseMPoint">
+      update ruser
+      set point = (point-1) 
+      where no = #{receipeUserNo}
+   </update>
 
-	<insert id="addLogUp">
-		insert into rpoint(no, user_no,receipe_user_no, receipe_no, type) 
-		values(rpoint_seq.nextval, #{userNo}, #{receipeUserNo}, #{receipeNo}, 'U')
-	</insert>
-	
-	<insert id="addLogDownP">
-		insert into rpoint(no, user_no,receipe_user_no, receipe_no, type) 
-		values(rpoint_seq.nextval, #{userNo}, #{receipeUserNo}, #{receipeNo}, 'D')		
-	</insert> 
-	
-	<delete id="deleteLog">
-		delete from rpoint
-		where user_no = #{userNo}
-		and receipe_user_no = #{receipeUserNo}
-		and receipe_no =  #{receipeNo}
-		and type = 'U'
-	</delete>
-	
-	<delete id="deleteLogDown">
-		delete from rpoint
-		where user_no = #{userNo}
-		and receipe_user_no = #{receipeUserNo}
-		and receipe_no =  #{receipeNo}
-		and type = 'D'
-	</delete>
-	
-	<select id="checkLike" resultType="int">
-		select count(*) 
-		from(select * from rpoint
-			 where user_no = #{userNo}
-			 and receipe_no =  #{receipeNo}
-			 and type = 'U')
-	</select>
-	
-	<select id="checkDown" resultType="int">
-		select count(*) 
-		from(select * from rpoint
-			 where user_no = #{userNo}
-			 and receipe_no =  #{receipeNo}
-			 and type = 'D')
-	</select>
-	
-	 <!-- home 레시피 조회 -->
+   <insert id="addLogUp">
+      insert into rpoint(no, user_no,receipe_user_no, receipe_no, type) 
+      values(rpoint_seq.nextval, #{userNo}, #{receipeUserNo}, #{receipeNo}, 'U')
+   </insert>
+   
+   <insert id="addLogDownP">
+      insert into rpoint(no, user_no,receipe_user_no, receipe_no, type) 
+      values(rpoint_seq.nextval, #{userNo}, #{receipeUserNo}, #{receipeNo}, 'D')      
+   </insert> 
+   
+   <delete id="deleteLog">
+      delete from rpoint
+      where user_no = #{userNo}
+      and receipe_user_no = #{receipeUserNo}
+      and receipe_no =  #{receipeNo}
+      and type = 'U'
+   </delete>
+   
+   <delete id="deleteLogDown">
+      delete from rpoint
+      where user_no = #{userNo}
+      and receipe_user_no = #{receipeUserNo}
+      and receipe_no =  #{receipeNo}
+      and type = 'D'
+   </delete>
+   
+   <select id="checkLike" resultType="int">
+      select count(*) 
+      from(select * from rpoint
+          where user_no = #{userNo}
+          and receipe_no =  #{receipeNo}
+          and type = 'U')
+   </select>
+   
+   <select id="checkDown" resultType="int">
+      select count(*) 
+      from(select * from rpoint
+          where user_no = #{userNo}
+          and receipe_no =  #{receipeNo}
+          and type = 'D')
+   </select>
+   
+    <!-- home 레시피 조회 -->
    <select id="selectBestRecipe" resultType="recipeVO">
     <![CDATA[
       select X.rnum, X.no, X.user_no as userNo, X.title, x.sub_title as subTitle, X.time, X.cost, X.content
@@ -344,39 +344,45 @@
           ]]>
    </select>
  <!--************************팔로우*********************************  -->    
-	
-	<update id="getFollowCnt">
-		update ruser 
-		set follower_cnt = (follower_cnt+1) 
-		where no = #{receipeUserNo}
-	</update>
+   
+   <update id="getFollowCnt">
+      update ruser 
+      set follower_cnt = (follower_cnt+1) 
+      where no = #{receipeUserNo}
+   </update>
 
-	<update id="loseFollowCnt">
-		update ruser 
-		set follower_cnt = (follower_cnt-1) 
-		where no = #{receipeUserNo}
-	</update>
+   <update id="loseFollowCnt">
+      update ruser 
+      set follower_cnt = (follower_cnt-1) 
+      where no = #{receipeUserNo}
+   </update> 
 
-	 <insert id="insertFollower">
-		insert into rfollow(no,follower,follwee) 
-		values(rfollow_seq.nextval,#{follwer}, #{followee})
-	</insert>
-	
-	<delete id="deleteFollower">
-		delete from rfollow
-		where follower = #{userNo}
-		and followee = #{receipeUserNo}
-		and type = 'F'
-	</delete>
-	
-	<select id="followCheck" resultType="int">
-		select count(*) 
-		from(select * from rfollow
-			 where follower = #{userNo}
-			 and followee =  #{receipeUserNo}
-			 and type = 'F')
-	</select>
-	
-	
+    <insert id="insertFollower">
+      insert into rfollow(no,follower,followee) 
+      values(rfollow_seq.nextval,#{userNo}, #{receipeUserNo})
+   </insert>
+   
+   <delete id="deleteFollower">
+      delete from rfollow
+      where follower = #{userNo}
+      and followee = #{receipeUserNo}
+      and type = 'F'
+   </delete>
+   
+   <select id="followCheck" resultType="int">
+      select count(*) 
+      from(select * from rfollow
+          where follower = #{userNo}
+          and followee =  #{receipeUserNo}
+          and type = 'F')
+   </select>
+
+   <!--전체 뷰카운트 나타내는 곳 -->
+   <select id="viewCnt" resultType="int">
+      select sum(view_cnt)
+      from recipeboard
+
+   </select>
+   
 
 </mapper>

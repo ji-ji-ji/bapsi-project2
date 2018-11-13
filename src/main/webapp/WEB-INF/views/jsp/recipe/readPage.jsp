@@ -14,7 +14,7 @@
    content="width=device-width, initial-scale=1, minimum-scale=1">
 <link rel="shortcut icon"
    href="${pageContext.request.contextPath}/resources/css/assets/images/bapsi-logo31-1-134x134.png"
-   type="image/x-icon">
+      type="image/x-icon">
 <meta name="description" content="Web Page Builder Description">
 <title>detail</title>
 <link rel="stylesheet"
@@ -66,34 +66,35 @@ a:hover {
       <div class="container">
          <h2 class="mbr-section-title pb-2 mbr-fonts-style display-2">제목
             : ${ recipe.title }</h2>
-         <h3 class="mbr-section-subtitle pb-3 mbr-fonts-style display-5">
-            부제목 : ${ recipe.subTitle }</h3>
-         <hr>
          <h3>요리이름: ${ recipe.recipeName }</h3>
+         <hr>
          <br>
          <!-- ---------------------------프로필사진--------------------------------------------- -->
-            <div class="media-container-row">
-                     <c:choose>
-                        <c:when test="${empty writerPhoto}">
-                           <img
-                              src="${pageContext.request.contextPath}/resources/images/Bapsi_logo.png"
-                              alt="이미지를 불러올수 없습니다.">
-                        </c:when>
-                        <c:otherwise>
-                           <img
-                              src="${pageContext.request.contextPath}/img/${writerPhoto}"
-                              style="width: 200px; height: 200px; border: 3px solid black; "
-                            alt="이미지를 불러올수 없습니다."> 
-                        </c:otherwise>
-                     </c:choose>
-            <h5 style="text-align: center;">글쓴이 : ${recipe.userNickName}</h5>
-                     <button id="follow" 
-                        class="<c:out value="${followCheck == 0? 'btn btn-primary-outline display-4':'btn btn-primary-outline display-4 active'}"/>"
-                           style="width: 220px; font-size: 18px;" >
-                           <c:out value="${followCheck == 0? '팔로우':'팔로우취소'}"/></button>
+         <div class="media-container-row">
+            <c:choose>
+               <c:when test="${empty writerPhoto}">
+                  <img
+                     src="${pageContext.request.contextPath}/resources/images/Bapsi_logo.png"
+                     width="300px" height="300px" alt="이미지를 불러올수 없습니다.">
+               </c:when>
+               <c:otherwise>
+                  <img src="${pageContext.request.contextPath}/img/${writerPhoto}"
+                     style="width: 200px;border: 3px solid black;"
+                     alt="이미지를 불러올수 없습니다.">
+               </c:otherwise>
+            </c:choose>
+         </div>
+         <div class="media-container-row">
+            <br>
+            <h5 style="text-align: center; padding-top: 20px;"><strong>${recipe.userNickName}</strong></h5>
+            <button id="follow"
+               class="<c:out value="${followCheck == 0? 'btn btn-primary-outline display-4':'btn btn-primary-outline display-4 active'}"/>"
+               style="width: 150px;heignt:20; font-size: 13px;">
+               <c:out value="${followCheck == 0? '팔로우':'팔로우취소'}" />
+            </button>
+         </div>
 
-            </div>
-            
+
          <!-- ------------------------------------------------------------------------------ -->
          <hr>
 
@@ -161,9 +162,7 @@ a:hover {
             </div>
 
             <div class="mbr-figure" style="width: 50%;">
-               <img
-                  src="${pageContext.request.contextPath}/resources/css/assets/images/02.jpg"
-                  alt="Mobirise">
+              <h3> 부제목 : ${ recipe.subTitle }</h3>
                <p style="text-align: center"
                   class="mbr-text mbr-section-text mbr-fonts-style display-7">
                   ${recipe.content }</p>
@@ -285,13 +284,20 @@ a:hover {
             
             //console.log(data.reList.length);
 
+            var sNo = '${userVO.no}';
             var str = ""; //화면에 뿌려 줄 댓글List 변수 선언 
   
+            console.log('test');
             $(data.reList).each(function() {
-                  str += "<hr><li data-no='"+this.no+"' class='reList'>"
-                     +"<strong>"+this.nickName + "</strong><div class='replyE'>&nbsp;" + this.comments + "</div>&nbsp;&nbsp;<button style='font-size:15px;border-radius: 12px;border: 2px solid #555555;'>수정 </button>" 
-                     + "<input type='button' class='deleteC' id='reDelBtn' style='font-size:15px;border-radius: 12px;border: 2px solid #555555;' value='삭제'></input>" +"<span style='position: absolute; right:5%'>" + this.updateDate + "</span>"
-                     + "</li>";
+                  
+               //console.log('result2:'+(this.loginUserNo==sNo));
+                     str += "<hr><li data-no='"+this.no+"' class='reList'>";
+                     str +="<strong>"+this.nickName + "</strong><div class='replyE'>&nbsp;" + this.comments + "</div>&nbsp;&nbsp;";
+               if(this.loginUserNo==sNo)   {
+                  str+="<button style='font-size:15px;border-radius: 12px;border: 2px solid #555555;'>수정 </button>" + "<input type='button' class='deleteC' id='reDelBtn' style='font-size:15px;border-radius: 12px;border: 2px solid #555555;' value='삭제'></input>";
+               }
+                     str+="<span style='position: absolute; right:5%'>" + this.updateDate + "</span>";
+                     str+= "</li>"; 
             });
             
             $("#reply").html(str);
@@ -715,12 +721,15 @@ a:hover {
 
          <hr>
          <br> <br>
+         <c:if test="${ recipe.userNo eq userVO.no }">
          <button type="button"
             onclick="location.href='${pageContext.request.contextPath}/recipe/update?no=${recipe.no}&page=${fCri.page}&numPerPage=${fCri.numPerPage}&findType=${fCri.findType }&keyword=${fCri.keyword }'">수정</button>
          &nbsp;&nbsp;
          <button type="button"
             onclick="location.href='${pageContext.request.contextPath}/recipe/delPage?no=${recipe.no}&page=${fCri.page}&numPerPage=${fCri.numPerPage}&findType=${fCri.findType }&keyword=${fCri.keyword }'">삭제</button>
          &nbsp;&nbsp;
+         </c:if>
+      
          <button type="button"
             onclick="location.href='${pageContext.request.contextPath}/recipe/recipeList?page=${fCri.page}&numPerPage=${fCri.numPerPage}&findType=${fCri.findType }&keyword=${fCri.keyword }'">목록</button>
          &nbsp;&nbsp;<br> <br> <br> <br>

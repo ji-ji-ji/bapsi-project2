@@ -66,6 +66,9 @@ public interface RecipeService {
 	RecipeVO selectByNo(int no);
 	List<IngVO> selectIngByNo(int no);
 	List<TagVO> selectTagByNo(int no);
+	
+//**********************************뷰카운트 조회 *****************************************
+	int viewCnt();
 
    
 }

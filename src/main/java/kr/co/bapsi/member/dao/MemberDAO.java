@@ -26,9 +26,12 @@ public interface MemberDAO {
 //***************마이페이지*******************************
 	// 마이페이지
 	public MemberVO myPage(int no) throws Exception;
+	
+	//로그인api 마이페이지
+	public MemberVO loginMyPage(String email) throws Exception;
 
-	// 마이페이지 파일
-	public UploadVO myPagefile(int no) throws Exception;
+	// 마이페이지 파일(로그인api 파일 + 기존 로그인 파일) 
+	public UploadVO myPagefile(int userNo) throws Exception;
 
 	// 회원정보 수정
 	public void update(MemberVO member) throws Exception;
@@ -37,7 +40,7 @@ public interface MemberDAO {
 	public void selfDelete(int no) throws Exception;
 	
 	// 회원탈퇴때 프로필 삭제
-	public void profileDelete(int no) throws Exception;
+	public void profileDelete(int userNo) throws Exception;
 
 //*****************************************************
 
@@ -79,6 +82,8 @@ public interface MemberDAO {
 //***************  로그인 *******************************
 	// 로그인
 	public MemberVO loginCheck(MemberVO member) throws Exception;
+	
+	public MemberVO apiMemSelect(String email) throws Exception;
 
 	// 네이버DB 저장 DAO
 	public void naverInsert(MemberVO mvo);
@@ -112,6 +117,8 @@ public interface MemberDAO {
 		// *****************구글 로그인************************************
 		public int  checkGoogleLogin(MemberVO memberVO) throws Exception;
 		public void joinGoogle(MemberVO memberVO) throws Exception;
+		public MemberVO googleSelect(String email) throws Exception;
+		
 	
 	
 //

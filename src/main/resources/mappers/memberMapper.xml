@@ -35,19 +35,27 @@
 <!--***********************마이페이지*******************************-->
 
   
-     <!-- 마이페이지 -->
+     <!-- 마이페이지  삭제해도 된다>!!-->
      <select id = "myPage" parameterType="int" resultType = "MemberVO">
         select no, email, hintq, hinta, name, nickname, tel, age, gender, comments
         from ruser
         where no = #{no}
      </select>
-  
-  	 <!-- 마이페이지 파일 -->
-     <select id = "myPagefile" parameterType="int" resultType = "UploadVO">
-     	select file_fakename
-     	from user_photo
-     	where no = #{userNo}
+     
+     <!--로그인 api 마이페이지(로그인 API + 기존 로그인) - session에 있는건 email이므로 email로 해야 한다.!! -->
+     <select id = "loginMyPage" parameterType="String" resultType="MemberVO">
+     	select no, email, hintq, hinta, name, nickname, tel, age, gender, comments
+     	from ruser
+     	where email=#{email}
      </select>
+  
+	<!-- 마이페이지 파일 -->
+     <select id = "myPagefile" parameterType="int" resultType = "UploadVO">
+        select file_fakename
+        from user_photo
+        where user_no = #{userNo}
+     </select>
+     
   
      <!-- 회원정보 수정 -->
      <update id = "update" parameterType = "MemberVO">
@@ -66,7 +74,7 @@
      <!-- 회원탈퇴시 프로필 삭제 -->
      <delete id = "profileDelete" parameterType = "int">
      	delete user_photo
-     	where no = #{userNo}
+     	where user_no = #{userNo}
      </delete>
      
  <!--*****************************************************  -->    
@@ -84,7 +92,7 @@
 	<select id="detailProfile" parameterType = "int" resultType="UploadVO">
 		select file_fakename
 		from user_photo
-		where no = #{userNo}
+		where user_no = #{userNo}
 	</select>
 	
      <!-- 관리자 페이지 : 회원정보 수정처리 -->
@@ -97,7 +105,7 @@
      
       <!-- 강제회원탈퇴 -->
      <delete id = "adminDelete" parameterType = "int">
-        delete ruser
+        delete from ruser
         where no = #{no}
      </delete>
      
@@ -235,10 +243,16 @@
 <!--****************회원목록(관리자) 관련 메소드******************   -->
      <!--네이버 로그인 API insert 값  -->
      <insert id="naverInsert" parameterType = "MemberVO" >
-     	insert into ruser(no, email, name,hintq, hinta,nickname)
-     	values(ruser_seq.nextval,#{email}, #{name}, #{hintq}, #{hinta},#{nickname})
+     	insert into ruser(no, email, name,hintq, hinta,nickname,gender,age,comments,tel,social_login)
+     	values(ruser_seq.nextval,#{email}, #{name}, #{hintq}, #{hinta},#{nickname},#{gender},#{age},#{comments},#{tel},#{socialLogin})
      </insert>
      
+<!--      api 로그인 사용자 정보 조회 -->
+     <select id = "apiMemSelect" parameterType = "MemberVO" resultType="MemberVO">
+        select no, email, hintq,hinta, name, nickname, tel, age,gender, comments, type, point,social_login
+        from ruser
+        where email = #{email}
+     </select>
      
      <!-- 로그인 -->
      <select id = "loginCheck" parameterType = "MemberVO" resultType="MemberVO">
@@ -288,9 +302,15 @@
  	where email=#{email} and name=#{name} and social_login='1'
  	</select>
  	
+ 	<select id="googleSelect" parameterType="String" resultType="MemberVO">
+      select no, email, hintq,hinta, name, nickname, tel, age,gender, comments, type, point,social_login
+      from ruser
+      where email = #{email}	
+ 	</select>
+ 	
  	<insert id="joinGoogle" parameterType="MemberVO">
-	 insert into ruser(no, email, password, name, nickname, social_login)
-	values(ruser_seq.nextval, #{email}, #{password}, #{name}, #{nickname}, #{socialLogin})
+	 insert into ruser(no, email, name,hintq, hinta,nickname,gender,age,comments,tel,social_login)
+	values(ruser_seq.nextval,#{email}, #{name}, #{hintq}, #{hinta},#{nickname},#{gender},#{age},#{comments},#{tel},#{socialLogin})
  	</insert>
      
      

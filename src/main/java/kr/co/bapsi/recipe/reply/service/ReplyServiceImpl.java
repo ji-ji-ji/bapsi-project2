@@ -23,7 +23,11 @@ public class ReplyServiceImpl implements ReplyService {
 
 	@Override
 	public List<ReplyVO> replyList(int recipeNo) {
-		return dao.list(recipeNo);
+		List<ReplyVO> tmp = dao.list(recipeNo);
+		for(ReplyVO r: tmp) {
+			System.out.println("yyj/"+r);
+		}
+		return tmp;
 	}
 
 	@Override
@@ -38,7 +42,11 @@ public class ReplyServiceImpl implements ReplyService {
 	
 	@Override
 	public List<ReplyVO> replyListPage(int recipeNo, PageCriteria pCri){
-		return dao.reListPage(recipeNo, pCri);
+		List<ReplyVO> tmp = dao.reListPage(recipeNo, pCri);
+		for(ReplyVO r: tmp) {
+			System.out.println("yyj/"+r);
+		}
+		return tmp;
 	}
 	
 	@Override

@@ -310,7 +310,7 @@ public class RecipeDAOImpl implements RecipeDAO {
 	@Override
 	public void insertFollower(int userNo, int receipeUserNo) {
 		
-		Map<Object, Object> map = new HashMap<>();
+		Map<Object, Integer> map = new HashMap<>();
 		map.put("userNo", userNo);
 		map.put("receipeUserNo", receipeUserNo);
 		
@@ -339,5 +339,11 @@ public class RecipeDAOImpl implements RecipeDAO {
 	   public List<RecipeVO> selectBestRecipe(){
 	      return sqlSessionTemplate.selectList("kr.co.bapsi.recipe.dao.RecipeDAO.selectBestRecipe");
 	   }
+	
+	@Override
+	public int viewCnt() {
+	
+		return sqlSessionTemplate.selectOne("kr.co.bapsi.recipe.dao.RecipeDAO.viewCnt");
+	}
 
 }

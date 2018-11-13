@@ -51,11 +51,17 @@ public class MemberDAOImpl implements MemberDAO {
 
 		return sqlSession.selectOne("myPage", no);
 	}
-
+	
+	//마이페이지 로그인 API+ 기존 회원 API 
 	@Override
-	public UploadVO myPagefile(int no) {
+	public MemberVO loginMyPage(String email) throws Exception{
+		return sqlSession.selectOne("loginMyPage",email);
+	}
+	// 로그인 API파일 + 기존 회원 API 파일  
+	@Override
+	public UploadVO myPagefile(int userNo) {
 
-		return sqlSession.selectOne("myPagefile", no);
+		return sqlSession.selectOne("myPagefile", userNo);
 	}
 
 	@Override
@@ -72,9 +78,9 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
-	public void profileDelete(int no) throws Exception {
+	public void profileDelete(int userNo) throws Exception {
 
-		sqlSession.delete("profileDelete", no);
+		sqlSession.delete("profileDelete", userNo);
 	}
 //*****************************************************
 
@@ -155,6 +161,10 @@ public class MemberDAOImpl implements MemberDAO {
 		return sqlSession.selectOne("loginCheck", member);
 	}
 
+	@Override
+	public MemberVO apiMemSelect(String email) throws Exception {
+		return sqlSession.selectOne("apiMemSelect", email);
+	}
 	// 네이버DB 저장 DAOImpl
 	@Override
 	public void naverInsert(MemberVO mvo) {
@@ -256,6 +266,13 @@ public class MemberDAOImpl implements MemberDAO {
 			memberVO.setPassword(password);
 			sqlSession.insert("joinGoogle", memberVO);
 			
+		}
+		
+	//구글 select 
+		@Override
+		public MemberVO googleSelect(String email) throws Exception {
+			
+			return sqlSession.selectOne("googleSelect",email);
 		}
 
 }

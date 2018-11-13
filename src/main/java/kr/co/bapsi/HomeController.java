@@ -43,11 +43,12 @@ public class HomeController {
 
 		logger.info("Welcome home! The client locale is {}.", locale);
 
+	    //****************************레시피  수  ****************************************
+
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 
 		String formattedDate = dateFormat.format(date);
-
 		model.addAttribute("serverTime", formattedDate);
 			
 		FindCriteria pCria = new FindCriteria();
@@ -61,9 +62,11 @@ public class HomeController {
 		pagingMaker.setTotalData(recipeService.findCountData(pCria));
 
 		model.addAttribute("pagingMaker", pagingMaker);
+		//******************************************************************************
+
 		
 		
-		////////페이지 회원수 ////////
+		//****************************페이지 회원수 ****************************************
 		kr.co.bapsi.member.vo.FindCriteria fCria = new kr.co.bapsi.member.vo.FindCriteria();
 		fCria.setNumPerPage(6);
 		fCria.setPage(1);
@@ -77,11 +80,22 @@ public class HomeController {
 			e.printStackTrace();
 		}
 		model.addAttribute("pagingMaker2",pagingMaker2);
-		///////////////////////////////////
+		//******************************************************************************
+		
+		
+		
+		//*****************************뷰카운트 *******************************************
+		model.addAttribute("viewCnt", recipeService.viewCnt());
+		
+		//******************************************************************************
+
 		
 		List<RecipeVO> recipeList = recipeService.selectBestRecipe();
 
 		model.addAttribute("recipeList", recipeList);
+		
+		
+		
 
 		return "home";
 	}

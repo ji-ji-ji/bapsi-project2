@@ -144,19 +144,20 @@ public class MemberController {
 //**************************마이페이지*******************************
 
 	// 회원정보조회(마이페이지)
-	@RequestMapping(value = "/mypage")
-	public String myPage(HttpSession session, Model model) throws Exception {
+	   @RequestMapping(value = "/mypage")
+	   public String myPage(HttpSession session, Model model) throws Exception {
 
-		MemberVO authUser = (MemberVO) session.getAttribute("userVO");
+	      MemberVO authUser = (MemberVO) session.getAttribute("userVO");
 
-		MemberVO member = memberService.myPage(authUser.getNo());
-		UploadVO upload = memberService.myPagefile(authUser.getNo());
+	      /*MemberVO member = memberService.myPage(authUser.getNo());*/
+	      MemberVO member =memberService.apiMemSelect(authUser.getEmail());
+	      UploadVO upload = memberService.myPagefile(authUser.getNo());
 
-		model.addAttribute("member", member);
-		model.addAttribute("upload", upload);
+	      model.addAttribute("member", member);
+	      model.addAttribute("upload", upload);
 
-		return "jsp/member/myPage";
-	}
+	      return "jsp/member/myPage";
+	   }
 
 	// 회원정보수정
 	@RequestMapping(value = "/mypage/update", method = RequestMethod.GET)
@@ -164,7 +165,9 @@ public class MemberController {
 
 		MemberVO authUser = (MemberVO) session.getAttribute("userVO");
 
-		MemberVO member = memberService.myPage(authUser.getNo());
+//		MemberVO member = memberService.myPage(authUser.getNo());
+		//로그인 API를 위한 설정
+		MemberVO member = memberService.loginMyPage(authUser.getEmail());
 		UploadVO upload = memberService.myPagefile(authUser.getNo());
 
 		model.addAttribute("member", member);
@@ -182,40 +185,43 @@ public class MemberController {
 	}
 
 	// 회원탈퇴
-	@RequestMapping("/selfdelete")
-	public String selfDelete(HttpSession session, UploadVO upload) throws Exception {
+	   @RequestMapping("/selfdelete")
+	   public String selfDelete(HttpSession session, UploadVO upload) throws Exception {
+	      
+	      System.out.println("selfdelete 접근 했습니다.");
+	      MemberVO authUser = (MemberVO) session.getAttribute("userVO");
+	      System.out.println(authUser.getNo());
+	      memberService.selfDelete(authUser.getNo());
 
-		MemberVO authUser = (MemberVO) session.getAttribute("userVO");
-
-		memberService.selfDelete(authUser.getNo());
-
-		upload = memberService.detailProfile(authUser.getNo());
-
-		System.out.println("파일 fakename : " + upload.getFile_fakename());
-
-		String path = "";
-
-		String profile = "/" + upload.getFile_fakename();
-
-		path = uploadPath + profile;
-
-		System.out.println("삭제할 파일 경로 : " + path);
-
-		File file = new File(path);
-
-		if (file.exists() == true) {
-
-			file.delete();
-		}
-
-		memberService.profileDelete(authUser.getNo());
-
-		session.removeAttribute(profile);
-
-		session.invalidate();
-
-		return "jsp/member/deleteCome";
-	}
+	      if(upload.getFile_fakename() != null) {
+	         upload = memberService.detailProfile(authUser.getNo());
+	         System.out.println("파일 fakename : " + upload.getFile_fakename());
+	   
+	         String path = "";
+	   
+	         String profile = "/" + upload.getFile_fakename();
+	   
+	         path = uploadPath + profile;
+	   
+	         System.out.println("삭제할 파일 경로 : " + path);
+	   
+	         File file = new File(path);
+	   
+	         if (file.exists() == true) {
+	   
+	               file.delete();
+	         }
+	   
+	         memberService.profileDelete(authUser.getNo());
+	   
+	         session.removeAttribute(profile);
+	         session.invalidate();
+	      } else {
+	         session.invalidate();
+	      }
+	      
+	      return "jsp/member/deleteCome";
+	   }
 
 	// id(email) 찾기??
 	@RequestMapping("/find/email")
@@ -406,16 +412,84 @@ public class MemberController {
 			String name = person.getDisplayName();
 			String email = person.getAccountEmail();
 			String socialLogin = "1";
-			MemberVO socialMember = new MemberVO();
+/*			MemberVO socialMember = new MemberVO();
 			int num = random.nextInt(89999999) + 10000000;
 			String password = "google" + Integer.toString(num);
 			socialMember.setPassword(password);
 			socialMember.setEmail(email);
 			socialMember.setName(name);
 			socialMember.setNickname(nickname);
-			socialMember.setSocialLogin(socialLogin);
+			socialMember.setSocialLogin(socialLogin);*/
+			
+			MemberVO socialMember =null;
+			socialMember = memberService.googleSelect(email);
+			
+			if(socialMember ==null) {
+				System.out.println("구글 VO에 들엉오나 확인 ");
+				socialMember = new MemberVO();
+				
+				socialMember.setEmail(email);
+				socialMember.setName(name);
+				socialMember.setNickname(nickname);
+				socialMember.setGender("S");
+				socialMember.setAge("나이대를 회원정보 수정을 통해 선택해주세요");
+				socialMember.setHintq("질문을 회원정보 수정을 통해 선택해주세요");
+				socialMember.setHinta("대답을 회원정보 수정을 통해 선택해주세요");
+				socialMember.setTel("000-0000-0000");
+				socialMember.setComments("할 말을 수정을 통해 선택해주세요");
+				socialMember.setSocialLogin("G");
+				memberService.joinGoogle(socialMember);
+				System.out.println("VO에 닮겼나?" + socialMember.toString());
+				session.setAttribute("userVO", socialMember);
+				try {
+					System.out.println("Closing Token....");
+					String revokeUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken + "";
+					URL url = new URL(revokeUrl);
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("GET");
+					conn.setDoOutput(true);
 
-			if (socialMember == null) {
+					BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+					String inputLine;
+					StringBuffer response = new StringBuffer();
+					while ((inputLine = in.readLine()) != null) {
+						response.append(inputLine);
+					}
+
+					in.close();
+				} catch (Exception e) {
+
+					e.printStackTrace();
+				}
+				return "jsp/login/googleCallback";
+				
+			}else {
+				session.setAttribute("userVO", socialMember);
+				System.out.println("구글 여기에 오려나?");
+				try {
+					System.out.println("Closing Token....");
+					String revokeUrl = "https://accounts.google.com/o/oauth2/revoke?token=" + accessToken + "";
+					URL url = new URL(revokeUrl);
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("GET");
+					conn.setDoOutput(true);
+
+					BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+					String inputLine;
+					StringBuffer response = new StringBuffer();
+					while ((inputLine = in.readLine()) != null) {
+						response.append(inputLine);
+					}
+
+					in.close();
+				} catch (Exception e) {
+
+					e.printStackTrace();
+				}
+				return "jsp/login/googleCallback";
+			}
+
+/*			if (socialMember == null) {
 				return "jsp/login/googleFail";
 			} else {
 				System.out.println(socialMember);
@@ -458,7 +532,7 @@ public class MemberController {
 					e.printStackTrace();
 				}
 				return "jsp/login/googleCallback";
-			}
+			}*/
 		}
 
 	// 로그인 콜백
@@ -482,22 +556,31 @@ public class MemberController {
 		String email = (String) mapResponse.get("email");
 		String name = (String) mapResponse.get("name");
 		// String nickname = (String)mapResponse.get("nickname");
-		System.out.println("email: " + email);
+		System.out.println("email: " + email+"//"+session.getId());
 		System.out.println("name: " + name);
 		// System.out.println("nickname: " + nickname);
 		
-		MemberVO userVO =new MemberVO();
-				
+//		MemberVO userVO =new MemberVO();
+		MemberVO userVO=null;
+		try {
+			userVO = memberService.apiMemSelect(email);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		// mvo.setNickname(nickname);
 
-		if (userVO.getEmail() == null) {
-			userVO.setNo(1);
+		if (userVO == null) {
+			userVO = new MemberVO();
 			userVO.setEmail(email);
 			userVO.setName(name);
+			userVO.setGender("S");
 			userVO.setAge("나이대를 회원정보 수정을 통해 선택해주세요");
 			userVO.setHintq("질문을 회원정보 수정을 통해 선택해주세요");
 			userVO.setHinta("대답을 회원정보 수정을 통해 선택해주세요");
 			userVO.setNickname("별병을 회원정보 수정을 통해 선택해주세요");
+			userVO.setTel("000-0000-0000");
+			userVO.setComments("할 말을 수정을 통해 선택해주세요");
+			userVO.setSocialLogin("N");
 			memberService.naverInsert(userVO);
 			
 			System.out.println("네이버 userVO를 확인하세요 " + userVO);
@@ -505,7 +588,9 @@ public class MemberController {
 			return "jsp/login/callback";
 
 		} else {
-
+//			userVO.setEmail(email);
+//			userVO.setName(name);
+//			userVO.setGender("남");
 			session.setAttribute("userVO", userVO);
 			System.out.println("네이버 userVO 집어넣장!!" + userVO);
 			return "jsp/login/callback";
