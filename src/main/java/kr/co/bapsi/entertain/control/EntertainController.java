@@ -42,39 +42,41 @@ public class EntertainController {
    
    @RequestMapping(value="/WhatToEat")
    public String WhatToEat(Model model, RandomEatVO randomEat) throws Exception {
-	  
-	      // 랜덤꺼 참고해서 저 안에 넣으면 끝임
-	     Random r = new Random();
-	      
-	     int num = r.nextInt(15) + 1;
-	   
-	     System.out.println(num);
-	   
-	     randomEat = entertainService.randomEat(num);
-	      
-	     model.addAttribute("randomEat", randomEat);
-	      
-	      
+     
+         // 랜덤꺼 참고해서 저 안에 넣으면 끝임
+        Random r = new Random();
+         
+        int num = r.nextInt(15) + 1;
+      
+        System.out.println(num);
+      
+        randomEat = entertainService.randomEat(num);
+         
+        model.addAttribute("randomEat", randomEat);
+         
+         
       return "jsp/entertain/randomEat";
    }
   
    // 있는 재료로 만들기
-   @RequestMapping("/messiType")
+   
+   // 재료 타입 보여주기
+   @RequestMapping(value="/ingredientsType")
    @ResponseBody
-   public List<String> messiType() throws Exception{
+   public List<String> ingredientsType() throws Exception{
       return entertainService.ingredientTypeList();
    }
-   
-   @RequestMapping(value="/messi")
+
+   // 전체 재료 이름 보여주기 와 선택한 타입으로 이름 보여주기
+   @RequestMapping(value="/ingredientsName")
    @ResponseBody
-   public List<IngVO> ingredients(@RequestParam("Sort") String type) throws Exception {
+   public List<String> selectIngredientsType(@RequestParam(value="Type", required=false) String type) throws Exception {
       System.out.println(type);
-      
-      List<IngVO> ingVO = entertainService.ingredients(type);
-      
-//      model.addAttribute("ingVO", ingVO);
-      
-      return ingVO;
+      if(type==null || type.equals("") || type.length()==0) {
+         return entertainService.ingredientsNameList();
+      }else {
+         return entertainService.selectIngredientsType(type);
+      }
    }
    
 }

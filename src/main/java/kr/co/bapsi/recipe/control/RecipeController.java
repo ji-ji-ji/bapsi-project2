@@ -321,5 +321,17 @@ public class RecipeController {
       return "redirect:/recipe/recipeList";
    }
    
+// ********************** //희승 체크박스 불러오기*********************************
+   @RequestMapping(value="/recipe/getCategoryNames", method=RequestMethod.POST)
+   @ResponseBody
+   public List<TagVO> categoryNames(String type) {
+      System.out.println("카테고리 : " + type);
+      
+      List<TagVO> result = recipeService.getCategoryNames(type);
+      
+      System.out.println("받아옴 : " + result);
+      
+      return result;
+   };
 
 }

@@ -10,7 +10,6 @@ import kr.co.bapsi.entertain.dao.EntertainDAO;
 import kr.co.bapsi.entertain.vo.FindCriteria;
 import kr.co.bapsi.entertain.vo.MukbangVO;
 import kr.co.bapsi.entertain.vo.RandomEatVO;
-import kr.co.bapsi.recipe.vo.IngVO;
 
 @Service
 public class EntertainServiceImpl implements EntertainService{
@@ -32,19 +31,25 @@ public class EntertainServiceImpl implements EntertainService{
    
    @Override
    public RandomEatVO randomEat(int no) throws Exception {
-	   
-	   return entertainDAO.randomEat(no);
+      
+      return entertainDAO.randomEat(no);
    }
    
    @Override
-   public List<IngVO> ingredients(String type) throws Exception {
-
-      return entertainDAO.ingredients(type);
-   }
-
-   @Override
    public List<String> ingredientTypeList() throws Exception {
-      return entertainDAO.selectTypeList();
+      return entertainDAO.ingredientsTypeList();
    }
+   
+   @Override
+   public List<String> ingredientsNameList() throws Exception {
+      return entertainDAO.ingredientsNameList();
+   }
+   
+   @Override
+   public List<String> selectIngredientsType(String type) throws Exception {
+
+      return entertainDAO.selectIngredientsType(type);
+   }
+   
    
 }

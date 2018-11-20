@@ -33,6 +33,12 @@
 
   <script>
      $(document).ready(function(){
+    	 $('#changePassword').click(function(){
+             if(confirm('비밀번호를 수정하시겠습니까?')){
+                location.href = "${pageContext.request.contextPath}/changePassword"
+             }
+          });   
+    	 
         $('#memberUpdate').click(function(){
            if(confirm('회원정보를 수정하시겠습니까?')){
               location.href = "${pageContext.request.contextPath}/mypage/update"
@@ -137,7 +143,7 @@
                            	 <div class="col-md-9" data-for="email">
                                 <input type="text" class="form-control input" name="gender" data-form-field="Email" placeholder="성별" id="gender" value = "${member.gender}" readonly="readonly">
                             </div>
-                            
+ <%--                            <c:if test="${member.socialLogin == '0'}">
                             <div class="col-md-4" data-for="hintq">
 									<input type="text" class="form-control input"
 										data-form-field="hintq" placeholder="비밀번호힌트 질문" id="hintq"
@@ -163,8 +169,8 @@
 										value="${member.hinta}" readonly="readonly"
 										style="font-size: 15px">
 								</div>
-                            
-                            
+                            </c:if>
+                             --%>
                             <div class="col-md-3" data-for="email">
                                 <input type="text" class="form-control input" data-form-field="Email" placeholder="나이대" id="age" readonly="readonly" style = "text-align : center;">
                             </div>
@@ -194,6 +200,9 @@
                             </div>
                             
                             <div class="input-group-btn col-md-12" style="margin-top: 15px;">
+                            <c:if test="${member.socialLogin == '0'}">
+								<input type="button" class="btn btn-form btn-secondary display-4" id = "changePassword" value="비밀번호변경">
+							</c:if>
                             <input type="button" class="btn btn-form btn-secondary display-4" id = "memberUpdate" value="정보 수정">
                             <input type="button" class="btn btn-form btn-secondary display-4" id = "selfDelete" value="회원 탈퇴">
                                <!-- <button href="" type="submit" class="btn btn-form btn-secondary display-4">회원정보 수정</button> -->

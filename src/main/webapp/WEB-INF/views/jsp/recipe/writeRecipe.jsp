@@ -393,9 +393,10 @@ $(document).ready(function() {
         enctype: 'multipart/form-data',
         processData: false,
         success: function(url) {
-//         	alert('test2:'+url);
+        	alert('test2:'+url);
           $(el).summernote('editor.insertImage', '${pageContext.request.contextPath}/'+url);
-//           alert('test3:'+url);
+
+          alert('test3:'+url);
           $('#imageBoard > ul').append('<li><img src="'+url+'" width="480" height="auto"/></li>');
         },
         error:function(){

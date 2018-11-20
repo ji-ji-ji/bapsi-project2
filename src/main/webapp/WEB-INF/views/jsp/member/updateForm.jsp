@@ -210,14 +210,14 @@
                                    <option>80대</option>
                                 </select>
                             </div>
-                            
+<%--                             <c:if test="${member.socialLogin == '0'}">
                             <div class="col-md-5" data-for="hintq">
 									<input type="text" class="form-control input"
 										data-form-field="hintq" placeholder="비밀번호힌트질문" id="hintq"
 										readonly="readonly" style="text-align: center; font-size: 17px;">
 								</div>
 								<div class="col-md-7" data-for="email">
-									<%-- <input type="text" class="form-control input" name="age" data-form-field="Email" placeholder="나이대" id="age" value = "${member.age}" readonly="readonly"> --%>
+									<input type="text" class="form-control input" name="age" data-form-field="Email" placeholder="나이대" id="age" value = "${member.age}" readonly="readonly">
 									<select class="form-control input" name="hintq" id="hintq">
 										<option selected>${member.hintq}</option>
 										<option>기억에 남는 추억이 장소는?</option>
@@ -243,7 +243,7 @@
 										value="${member.hinta}">
 								</div>
                             
-                            
+                            </c:if> --%>
                             <div class="col-md-3" data-for="email">
                                 <input type="text" class="form-control input" data-form-field="Email" placeholder="닉네임" id="nicknameFix" readonly="readonly" style = "text-align : center;">
                             </div>

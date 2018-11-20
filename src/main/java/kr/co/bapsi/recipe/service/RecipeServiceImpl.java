@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.co.bapsi.member.vo.MemberVO;
 import kr.co.bapsi.recipe.dao.RecipeDAO;
 import kr.co.bapsi.recipe.vo.FindCriteria;
 import kr.co.bapsi.recipe.vo.FindTagCriteria;
@@ -126,10 +127,41 @@ public class RecipeServiceImpl implements RecipeService {
 		recipeDao.deleteLogDown(userNo, receipeUserNo, receipeNo);
 	}
 	
+	//  랭킹페이지 관련
 	@Override
 	   public List<RecipeVO> selectBestRecipe() {
 	      return recipeDao.selectBestRecipe();
 	   }
+	@Override
+	public List<MemberVO> selectBestMember() {
+		return recipeDao.selectBestMember();
+	}
+	@Override
+	public List<MemberVO> selectBestMemberR() {
+		return recipeDao.selectBestMemberR();
+	}
+	
+	//	회원 상세페이지 관련
+	@Override
+	public int pointCnt(int no) {
+		return recipeDao.pointCnt(no);
+	}
+	@Override
+	public int recipeCnt(int no) {
+		return recipeDao.recipeCnt(no);
+	}
+	@Override
+	public List<RecipeVO> userPageRecipe(int no) {
+		return recipeDao.userPageRecipe(no);
+	}
+	@Override
+	public List<RecipeVO> likeRecipe(int no){
+		return recipeDao.likeRecipe(no);
+	}
+	@Override
+	public int followingCnt(int no) {
+		return recipeDao.followingCnt(no);
+	}
 
 	// ----------------팔로우------------------------
 	@Override
@@ -212,4 +244,9 @@ public class RecipeServiceImpl implements RecipeService {
 		return recipeDao.viewCnt();
 	}
 
+   @Override
+   public List<TagVO> getCategoryNames(String type) {
+      
+      return recipeDao.getCategoryNames(type);
+   }
 }

@@ -162,6 +162,7 @@ public class PointController {
    // 팔로우
    @RequestMapping(value = "/follow",method = RequestMethod.POST)
    public Map<String, Object> follow(@RequestBody Map<String, Object> followMap, Model model) throws Exception {
+      System.out.println("follow 실행");
       
       int userNo = (int)followMap.get("userNo");
       int receipeUserNo = (int)followMap.get("receipeUserNo");

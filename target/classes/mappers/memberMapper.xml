@@ -11,8 +11,8 @@
  <!--************************회원가입 ****************8***************  -->
    <!-- 회원가입 -->
      <insert id="join" parameterType = "MemberVO">
-        insert into ruser (no, email, password, hintq, hinta, name, nickname, tel, age, gender, comments)
-        values(ruser_seq.nextval, #{email}, #{password}, #{hintq}, #{hinta}, #{name}, #{nickname}, #{tel}, #{age}, #{gender}, #{comments})
+        insert into ruser (no, email, password, name, nickname, tel, age, gender, comments)
+        values(ruser_seq.nextval, #{email}, #{password}, #{name}, #{nickname}, #{tel}, #{age}, #{gender}, #{comments})
      </insert>
   
      <!-- 이메일 중복체크 -->
@@ -37,16 +37,16 @@
   
      <!-- 마이페이지  삭제해도 된다>!!-->
      <select id = "myPage" parameterType="int" resultType = "MemberVO">
-        select no, email, hintq, hinta, name, nickname, tel, age, gender, comments
+        select no, email, name, nickname, tel, age, gender, comments, social-login as socialLogin
         from ruser
         where no = #{no}
      </select>
      
      <!--로그인 api 마이페이지(로그인 API + 기존 로그인) - session에 있는건 email이므로 email로 해야 한다.!! -->
      <select id = "loginMyPage" parameterType="String" resultType="MemberVO">
-     	select no, email, hintq, hinta, name, nickname, tel, age, gender, comments
-     	from ruser
-     	where email=#{email}
+        select no, email, name, nickname, tel, age, gender, comments
+        from ruser
+        where email=#{email}
      </select>
   
 	<!-- 마이페이지 파일 -->
@@ -60,7 +60,7 @@
      <!-- 회원정보 수정 -->
      <update id = "update" parameterType = "MemberVO">
         update ruser
-        set hintq = #{hintq}, hinta = #{hinta}, age = #{age}, nickname = #{nickname}, tel = #{tel}, comments = #{comments}
+        set age = #{age}, nickname = #{nickname}, tel = #{tel}, comments = #{comments}
         where no = #{no}
      </update>
     
@@ -73,8 +73,8 @@
      
      <!-- 회원탈퇴시 프로필 삭제 -->
      <delete id = "profileDelete" parameterType = "int">
-     	delete user_photo
-     	where user_no = #{userNo}
+        delete user_photo
+        where user_no = #{userNo}
      </delete>
      
  <!--*****************************************************  -->    
@@ -84,17 +84,18 @@
        <!-- 회원정보 상세조회 -->
      <select id="detailMember" parameterType="int" resultType="MemberVO">
         select no, email, name, nickname, tel, gender, age, comments, type, to_char(reg_date, 'yyyy-mm-dd') as reg_date
+        		, follower_cnt as followrCnt, file_fakename
         from ruser
         where no = #{no}
      </select>
 
-	<!-- 괸리자 페이지 : 회원정보 프로필 -->
-	<select id="detailProfile" parameterType = "int" resultType="UploadVO">
-		select file_fakename
-		from user_photo
-		where user_no = #{userNo}
-	</select>
-	
+   <!-- 괸리자 페이지 : 회원정보 프로필 -->
+   <select id="detailProfile" parameterType = "int" resultType="UploadVO">
+      select file_fakename
+      from user_photo
+      where user_no = #{userNo}
+   </select>
+   
      <!-- 관리자 페이지 : 회원정보 수정처리 -->
      <update id="memberUpdate" parameterType = "MemberVO">
         update ruser
@@ -109,36 +110,42 @@
         where no = #{no}
      </delete>
      
+     <!-- 강제 회원 탈퇴 할때 프로필도 같이 삭제 -->
+     <delete id = "adminDeleteProfile" parameterType = "int">
+        delete user_photo
+        where user_no = #{no}
+     </delete>
+     
      
           <!--관리자페이지: 회원정보 페이징  -->
      <select id="pagingList" resultType="MemberVO">
      <![CDATA[
-		select 
-		b.rnum, b.no, b.email, b.name, b.nickname,b.tel,b.age,b.comments,b.type,b.point
-		from(
-		 select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.age, a.comments, a.type, a.point
-		    from (
-		        select no, email, name, nickname,age, tel, comments, type, point
-		            from ruser
-		            order by no desc) a
-		        where rownum <= #{page}*10 ) b
-		where b.rnum > (#{page}*10)-10
+      select 
+      b.rnum, b.no, b.email, b.name, b.nickname,b.tel,b.age,b.comments,b.type,b.point
+      from(
+       select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.age, a.comments, a.type, a.point
+          from (
+              select no, email, name, nickname,age, tel, comments, type, point
+                  from ruser
+                  order by no desc) a
+              where rownum <= #{page}*10 ) b
+      where b.rnum > (#{page}*10)-10
      ]]>
      </select>
      
      <!-- 관리자페이지: 회원정보 페이징 -->
      <select id="pagingCriteria" resultType="MemberVO">
      <![CDATA[
-     	select 
-     	b.rnum, b.no, b.email, b.name, b.nickname,b.tel,b.age,b.comments,b.type,b.point
-     	from(
- 		 select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.age, a.comments, a.type, a.point
- 		    from (
-     			select no, email, name, nickname,age, tel, comments, type, point
- 		            from ruser
- 		            order by no desc) a
- 		    where rownum <= #{startPage}+(#{numPerPage}-1) ) b
- 		  where b.rnum >= #{startPage}
+        select 
+        b.rnum, b.no, b.email, b.name, b.nickname,b.tel,b.age,b.comments,b.type,b.point
+        from(
+        select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.age, a.comments, a.type, a.point
+           from (
+              select no, email, name, nickname,age, tel, comments, type, point
+                   from ruser
+                   order by no desc) a
+           where rownum <= #{startPage}+(#{numPerPage}-1) ) b
+         where b.rnum >= #{startPage}
 
      ]]>
      </select>
@@ -146,8 +153,8 @@
      <!--관리자페이지: 페이징 전체 데이터 가져오기  -->
      <select id="pagingCountData" resultType="int">
      <![CDATA[
-     	select count(no) from ruser
-     	where no>0
+        select count(no) from ruser
+        where no>0
      ]]>
        
      </select>
@@ -155,67 +162,67 @@
        <!--관리자 검색기능 구현: MyBatis에서 제공하는 <include>, <sql> 중복된 값 간편하게!!  -->
   <sql id="findSQL">
   
-  	  <where>
-  	  	<if test="findType != null and findType =='N'.toString()">
-  			and email like '%'||#{keyword}||'%'
-  			or name like '%'||#{keyword}||'%'
-  			or gender like '%'||#{keyword}||'%'
-  			or nickname like '%'||#{keyword}||'%'
-  			or tel like '%'||#{keyword}||'%'
-  			or age like '%'||#{keyword}||'%'
-  			or type like '%'||#{keyword}||'%'
-  			or point like '%'||#{keyword}||'%'
-  			or reg_date like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType =='E'.toString()">
-  			and email like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType =='N'.toString()">
-  			and name like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType =='G'.toString()">
-  			and gender like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType=='K'.toString()">
-  			and nickname like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType=='T'.toString()">
-  			and tel like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and  findType == 'A'.toString()">
-  			and age like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType =='S'.toString()">
-    		and type like '%'||#{keyword}||'%'
-  		</if>
-  		 <if test="findType != null and findType =='P'.toString()">
-    		and point like '%'||#{keyword}||'%'
-  		</if>
-  		<if test="findType != null and findType =='D'.toString()">
-    		and reg_date like '%'||#{keyword}||'%'
-  		</if>
-  	</where>
-  	
+       <where>
+          <if test="findType != null and findType =='N'.toString()">
+           and email like '%'||#{keyword}||'%'
+           or name like '%'||#{keyword}||'%'
+           or gender like '%'||#{keyword}||'%'
+           or nickname like '%'||#{keyword}||'%'
+           or tel like '%'||#{keyword}||'%'
+           or age like '%'||#{keyword}||'%'
+           or type like '%'||#{keyword}||'%'
+           or point like '%'||#{keyword}||'%'
+           or reg_date like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType =='E'.toString()">
+           and email like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType =='N'.toString()">
+           and name like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType =='G'.toString()">
+           and gender like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType=='K'.toString()">
+           and nickname like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType=='T'.toString()">
+           and tel like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and  findType == 'A'.toString()">
+           and age like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType =='S'.toString()">
+          and type like '%'||#{keyword}||'%'
+        </if>
+         <if test="findType != null and findType =='P'.toString()">
+          and point like '%'||#{keyword}||'%'
+        </if>
+        <if test="findType != null and findType =='D'.toString()">
+          and reg_date like '%'||#{keyword}||'%'
+        </if>
+     </where>
+     
   
   </sql>
   
   <!--관리자페이지: 검색기능 구현  -->
    <select id="listFindM" resultType="MemberVO">
   
-     	select 
-     	b.rnum, b.no, b.email, b.name, b.nickname,b.tel, b.gender, b.age, b.comments, b.type, b.point, b.reg_date
-     	from(
- 		 select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.gender, a.age, a.comments, a.type, a.point, a.reg_date
- 		    from (
-     			select no, email, name, nickname,age, tel, gender, comments, type, point, to_char(reg_date, 'yyyy/mm/dd') as reg_date
- 		            from ruser
- 		            
-					<include refid="findSQL"></include>
-				      
-	<![CDATA[
- 		            order by no desc) a
- 		    where rownum <= #{startPage}+(#{numPerPage}-1) ) b
- 		  where b.rnum >= #{startPage}
+        select 
+        b.rnum, b.no, b.email, b.name, b.nickname,b.tel, b.gender, b.age, b.comments, b.type, b.point, b.reg_date
+        from(
+        select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.gender, a.age, a.comments, a.type, a.point, a.reg_date
+           from (
+              select no, email, name, nickname,age, tel, gender, comments, type, point, to_char(reg_date, 'yyyy/mm/dd') as reg_date
+                   from ruser
+                   
+               <include refid="findSQL"></include>
+                  
+   <![CDATA[
+                   order by no desc) a
+           where rownum <= #{startPage}+(#{numPerPage}-1) ) b
+         where b.rnum >= #{startPage}
 
      ]]>
     </select>
@@ -226,9 +233,9 @@
   <select id="findCountDataM" resultType="int">
   
 
-     	select count(no) from ruser
+        select count(no) from ruser
 
-		<include refid="findSQL"></include>
+      <include refid="findSQL"></include>
 
 
   </select>
@@ -243,20 +250,20 @@
 <!--****************회원목록(관리자) 관련 메소드******************   -->
      <!--네이버 로그인 API insert 값  -->
      <insert id="naverInsert" parameterType = "MemberVO" >
-     	insert into ruser(no, email, name,hintq, hinta,nickname,gender,age,comments,tel,social_login)
-     	values(ruser_seq.nextval,#{email}, #{name}, #{hintq}, #{hinta},#{nickname},#{gender},#{age},#{comments},#{tel},#{socialLogin})
+        insert into ruser(no, email, name,nickname,gender,age,comments,tel,social_login)
+        values(ruser_seq.nextval,#{email}, #{name},#{nickname},#{gender},#{age},#{comments},#{tel},#{socialLogin})
      </insert>
      
 <!--      api 로그인 사용자 정보 조회 -->
      <select id = "apiMemSelect" parameterType = "MemberVO" resultType="MemberVO">
-        select no, email, hintq,hinta, name, nickname, tel, age,gender, comments, type, point,social_login
+        select no, email, name, nickname, tel, age,gender, comments, type, point,social_login as socialLogin
         from ruser
         where email = #{email}
      </select>
      
      <!-- 로그인 -->
      <select id = "loginCheck" parameterType = "MemberVO" resultType="MemberVO">
-        select no, email, password, name, nickname, tel, age, comments, type, point
+        select no, email, password, name, nickname, tel, age, comments, type, point, file_fakename
         from ruser
         where email = #{email} and password = #{password}
      </select>
@@ -265,55 +272,59 @@
    <!--*********************************************************  -->    
  
      <!-- 체크박스 회원 탈퇴 = -->
-     <delete id="checkDelete" parameterType="MemberVO">	
-    	delete ruser
-    	where no = #{no}
+     <delete id="checkDelete" parameterType="MemberVO">   
+       delete ruser
+       where no = #{no}
      </delete>
-	<!-- 체크박스 회원 관리자 등업 -->     
-	<update id="checkUpM" parameterType="MemberVO">
-		update ruser
-		set type='S'
-		where no = #{no}
-	</update>
-	<!-- 체크박스 회원 일반회원 강등 -->
-	<update id="checkDownM" parameterType="MemberVO">
-			update ruser
-			set type='U'
-			where no = #{no}
-	</update>  
+   <!-- 체크박스 회원 관리자 등업 -->     
+   <update id="checkUpM" parameterType="MemberVO">
+      update ruser
+      set type='S'
+      where no = #{no}
+   </update>
+   <!-- 체크박스 회원 일반회원 강등 -->
+   <update id="checkDownM" parameterType="MemberVO">
+         update ruser
+         set type='U'
+         where no = #{no}
+   </update>  
      
      <!--*********************이메일 비밀번호 인증************************************ -->
-	<update id="newPassword" parameterType="MemberVO">
-		update ruser
-		set password = #{password}
-		where email=#{email} and hintq=#{hintq} and hinta=#{hinta}
-	</update>
+   <update id="newPassword" parameterType="MemberVO">
+      update ruser
+      set password = #{password}
+      where email=#{email}
+   </update>
 
-	<select id="comparePassword" parameterType="MemberVO" resultType="MemberVO">
-	select *
-	from ruser
-	where email=#{email} and password = #{password}
-	</select>
-	
+   <select id="comparePassword" parameterType="MemberVO" resultType="MemberVO">
+   select *
+   from ruser
+   where email=#{email} and password = #{password}
+   </select>
+   
 <!--*********************구글정보있으면 가입, 정보없으면 로그인************************************ -->    
- 	<select id="checkJoinGoogle" parameterType="MemberVO" resultType="Integer">
- 	select count(*)
- 	from ruser
- 	where email=#{email} and name=#{name} and social_login='1'
- 	</select>
- 	
- 	<select id="googleSelect" parameterType="String" resultType="MemberVO">
-      select no, email, hintq,hinta, name, nickname, tel, age,gender, comments, type, point,social_login
+    <select id="checkJoinGoogle" parameterType="MemberVO" resultType="Integer">
+    select count(*)
+    from ruser
+    where email=#{email} and name=#{name} and social_login='G'
+    </select>
+    
+    <select id="googleSelect" parameterType="String" resultType="MemberVO">
+      select no, email, name, nickname, tel, age,gender, comments, type, point,social_login
       from ruser
-      where email = #{email}	
- 	</select>
- 	
- 	<insert id="joinGoogle" parameterType="MemberVO">
-	 insert into ruser(no, email, name,hintq, hinta,nickname,gender,age,comments,tel,social_login)
-	values(ruser_seq.nextval,#{email}, #{name}, #{hintq}, #{hinta},#{nickname},#{gender},#{age},#{comments},#{tel},#{socialLogin})
- 	</insert>
+      where email = #{email}   
+    </select>
+    
+    <insert id="joinGoogle" parameterType="MemberVO">
+    insert into ruser(no, email, name,nickname,gender,age,comments,tel,social_login)
+   values(ruser_seq.nextval,#{email}, #{name}, #{nickname},#{gender},#{age},#{comments},#{tel},#{socialLogin})
+    </insert>
      
-     
+    <update id="changePassword" parameterType="MemberVO">
+    update ruser
+    set password = #{password}
+    where email=#{email}
+    </update>
      
 
 

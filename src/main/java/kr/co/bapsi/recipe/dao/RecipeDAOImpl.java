@@ -8,12 +8,11 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import kr.co.bapsi.member.vo.MemberVO;
 import kr.co.bapsi.recipe.vo.FindCriteria;
 import kr.co.bapsi.recipe.vo.FindTagCriteria;
 import kr.co.bapsi.recipe.vo.IngVO;
-import kr.co.bapsi.recipe.vo.PageCriteria;
 import kr.co.bapsi.recipe.vo.RecipeVO;
-import kr.co.bapsi.recipe.vo.TagPageCriteria;
 import kr.co.bapsi.recipe.vo.TagVO;
 
 /**
@@ -335,15 +334,57 @@ public class RecipeDAOImpl implements RecipeDAO {
 		
 		return sqlSessionTemplate.selectOne("kr.co.bapsi.recipe.dao.RecipeDAO.followCheck", map);
 	}	
+	
+	// *******************************************랭킹 페이지**************************************************
 	@Override
 	   public List<RecipeVO> selectBestRecipe(){
 	      return sqlSessionTemplate.selectList("kr.co.bapsi.recipe.dao.RecipeDAO.selectBestRecipe");
 	   }
+	@Override
+	public List<MemberVO> selectBestMember(){
+		return sqlSessionTemplate.selectList("kr.co.bapsi.recipe.dao.RecipeDAO.selectBestMember");
+	}
+	@Override
+	public List<MemberVO> selectBestMemberR(){
+		return sqlSessionTemplate.selectList("kr.co.bapsi.recipe.dao.RecipeDAO.selectBestMemberR");
+	}
+	// ****************************************************************************************************
 	
+	// *************************************회원 상세 페이지**************************************************
+	@Override
+	public int pointCnt(int no) {
+		return sqlSessionTemplate.selectOne("kr.co.bapsi.recipe.dao.RecipeDAO.pointCnt", no);
+	}
+	@Override
+	public int recipeCnt(int no) {
+		return sqlSessionTemplate.selectOne("kr.co.bapsi.recipe.dao.RecipeDAO.recipeCnt", no);
+	}
+	@Override
+	public List<RecipeVO> userPageRecipe(int no){
+		return sqlSessionTemplate.selectList("kr.co.bapsi.recipe.dao.RecipeDAO.userPageRecipe", no);
+	}
+
+	@Override
+	public List<RecipeVO> likeRecipe(int no){
+		return sqlSessionTemplate.selectList("kr.co.bapsi.recipe.dao.RecipeDAO.likeRecipe", no);
+	}
+
+	@Override
+	public int followingCnt(int no) {
+		return sqlSessionTemplate.selectOne("kr.co.bapsi.recipe.dao.RecipeDAO.followingCnt", no);
+	}
+	// ****************************************************************************************************
+
 	@Override
 	public int viewCnt() {
-	
+		
 		return sqlSessionTemplate.selectOne("kr.co.bapsi.recipe.dao.RecipeDAO.viewCnt");
 	}
+	
+	@Override
+   public List<TagVO> getCategoryNames(String type) {
+      
+      return sqlSessionTemplate.selectList("kr.co.bapsi.recipe.dao.RecipeDAO.getCategoryNames", type);
+   }
 
 }

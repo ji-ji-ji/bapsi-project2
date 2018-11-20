@@ -113,15 +113,19 @@
                varStatus="loop">
             <div class="team-item col-lg-3 col-md-6">
                <div class="item-image">
-                <a
-                           href="${pageContext.request.contextPath}/recipe/readPage${pagingMaker.makeFind(pagingMaker.cri.page)}&no=${recipe.no}&userNo=${userVO.no}&click=1">
+                <a href="${pageContext.request.contextPath}/recipe/readPage${pagingMaker.makeFind(pagingMaker.cri.page)}&no=${recipe.no}&userNo=${userVO.no}&click=1">
                   <img
                      src="${pageContext.request.contextPath}/resources/css/assets/images/face6.jpg">
                      </a>
                </div>
                <div class="item-caption py-3">
                   <div class="item-name px-2">
-                     <p class="mbr-fonts-style display-5">${recipe.title}</p>
+                  	<c:if test="${recipe.title.length()>7}">
+                     	<p class="mbr-fonts-style display-5">${recipe.title.substring(0,7)} ...</p>
+                     </c:if>
+                  	<c:if test="${recipe.title.length()<=7}">
+                     	<p class="mbr-fonts-style display-5">${recipe.title}</p>
+                     </c:if>
                   </div>
                   <div class="item-role px-2">
                      <p>${recipe.userNickName}님</p>

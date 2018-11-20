@@ -8,16 +8,30 @@
   <mapper namespace="kr.co.bapsi.upload.controller.UploadController">
 
    <!-- 업로드 누르면 넣음 -->
-   <insert id = "uploadProfile" parameterType = "MemberVO">
+   <insert id = "uploadProfile" parameterType = "UploadVO">
          insert into user_photo(no, user_no, file_oriname, file_fakename)
          values(user_photo_seq.nextval , #{userNo}, #{file_oriname}, #{file_fakename})
    </insert>
+   
+   <!-- ruser에 filefake이름 넣음 -->
+   <update id = "putFakename" parameterType = "MemberVO">
+         update ruser
+         set file_fakename = #{file_fakename}
+         where no = #{no}
+   </update>
  
     <!-- 프로필 삭제하면 db에서 삭제됨 -->
     <delete id = "deleteProfile" parameterType = "int">
        delete user_photo
        where user_no = #{userNo}
     </delete>
+    
+    <!-- 프로필 삭제하면 ruser에 filefake이름 none으로 바꿈  -->
+    <update id = "outFakename" parameterType = "int">
+       update ruser
+       set file_fakename = null
+       where no = #{no}
+    </update>
 
    <!-- 관리자에서 프로필 삭제하게 -->
    <delete id = "memberDeleteProfile" parameterType = "int">

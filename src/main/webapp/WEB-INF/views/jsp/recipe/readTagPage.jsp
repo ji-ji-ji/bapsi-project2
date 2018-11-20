@@ -44,7 +44,12 @@ a:hover {
    color: blue;
 }
 </style>
-
+<script>
+if(${empty userVO}) {
+   alert("로그인이 필요합니다");
+   location.href = "${pageContext.request.contextPath}/login";      
+}
+</script>
 </head>
 
 <body>

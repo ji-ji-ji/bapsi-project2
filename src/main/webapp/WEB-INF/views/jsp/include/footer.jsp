@@ -22,7 +22,8 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/assets/theme/css/style.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/assets/mobirise/css/mbr-additional.css" type="text/css">
   
-  <script src="${pageContext.request.contextPath}/resources/css/assets/web/assets/jquery/jquery.min.js"></script>
+  <!-- 자동완성 기능과의 충돌로 보류  -->
+<%--   <script src="${pageContext.request.contextPath}/resources/css/assets/web/assets/jquery/jquery.min.js"></script> --%>
   <script src="${pageContext.request.contextPath}/resources/css/assets/popper/popper.min.js"></script>
   <script src="${pageContext.request.contextPath}/resources/css/assets/tether/tether.min.js"></script>
   <script src="${pageContext.request.contextPath}/resources/css/assets/bootstrap/js/bootstrap.min.js"></script>

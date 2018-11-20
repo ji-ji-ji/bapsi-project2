@@ -142,7 +142,7 @@
 			return false;
 		}
 
-		if($('#hintq').val() == ""){
+/* 		if($('#hintq').val() == ""){
 			alert('비밀번호 힌트 질문과 대답을 입력해주세요.\n비밀번호 찾기에 꼭 필요합니다.');
 			$('#hintq').focus();
 			return false;
@@ -152,7 +152,7 @@
 			alert('비밀번호 힌트 질문과 대답을 입력해주세요.\n비밀번호 찾기에 꼭 필요합니다.');
 			$('#hinta').focus();
 			return false;
-		}
+		} */
 		
 		if ($('#name').val() == "") {
 			alert('이름을 입력해주세요');
@@ -338,7 +338,7 @@
 								</div>
 							</div>
 
-							<div class="col-md-6 multi-horizontal" data-for="phone">
+<!-- 							<div class="col-md-6 multi-horizontal" data-for="phone">
 								<div class="form-group">
 									<label class="form-control-label mbr-fonts-style display-7"
 										for="phone-form1-t">비밀번호 찾기 힌트</label> <select
@@ -358,7 +358,7 @@
 								</div>
 								<input type="text" class="form-control" name="hinta"
 									data-form-field="Phone" placeholder="답변을 입력해 주세요" id="hinta">
-							</div>
+							</div> -->
 							<br> <br>
 							<div class="col-md-7 multi-horizontal" data-for="phone">
 								<div class="form-group">

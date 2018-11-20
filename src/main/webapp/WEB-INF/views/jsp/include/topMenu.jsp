@@ -27,9 +27,16 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/assets/mobirise/css/mbr-additional.css" type="text/css">
 <!-- 드롭박스 추가 -->   
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/assets/dropdown/css/ddmenu.css" type="text/css">
+<!-- 자도완성 기능 -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/autocomplete/css/jquery-ui.css" type="text/css">
+
    
 
 <script src="${pageContext.request.contextPath}/resources/css/assets/web/assets/jquery/jquery.min.js"></script>
+<!-- 자동완성 기능 -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/autocomplete/js/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/autocomplete/js/jquery-ui.js"></script>
+
 <script src="${pageContext.request.contextPath}/resources/css/assets/popper/popper.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/css/assets/tether/tether.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/css/assets/bootstrap/js/bootstrap.min.js"></script>
@@ -41,6 +48,7 @@
 <script src="${pageContext.request.contextPath}/resources/css/assets/theme/js/script.js"></script>
 <!-- 드롭박스 추가  -->
 <script src="${pageContext.request.contextPath}/resources/css/assets/dropdown/js/ddmenu.js"></script>
+
 
 <style>
    
@@ -183,7 +191,7 @@
         box-sizing:border-box;
      }
      
-     .field2 > dl > dd > ul > li.no_Ingredients {
+     .field2 > dl > dd > ul > li.select_Ingredients {
         float:none;
         font-size:17px;
         color:#b7b7b7;
@@ -230,128 +238,177 @@
    }
      
 </style>
-
-<script>
-      $(function(){
-         $.ajax({
-            url:"${pageContext.request.contextPath}/messiType",
-            method:"get",
-            success:function(typeList){
-               var typeInsert = "";
-               $.each(typeList, function(i, type){
-                  typeInsert += '<li><a class="messiType" href="#">'+type+'</a></li>';
-               })
-               $("#big_wrap").html(typeInsert);
-               
-               $('.messiType').bind('click', function(){
-                  $.ajax({
-                     url:"${pageContext.request.contextPath}/messi",
-                     data:{"Sort":$(this).text()},
-                     method:"get",
-                     success:function(ingList){
-                        var ingInsert = "";
-                        $.each(ingList, function(i, ingVO){
-                            ingInsert += '<li><a class="" href="">'+ingVO['ingName']+'</a></li>';
-                        })
-                        $("#small_wrap").html(ingInsert);
-                        
-                     }
-                  })
-               });
-            }
-         })
-      })
-
-//       function thisSort(i){
-//          alert(i);
-// //          location.href = "${pageContext.request.contextPath}/messi?Sort="+i;
-//          $.ajax({
-//             url:"${pageContext.request.contextPath}/messi",
-//             data:{"Sort":i},
-//             method:"get",
-//             success:function(ingList){
-//                var ingInsert = "";
-//                $.each(ingList, function(i, ingVO){
-//                    ingInsert += '<li><a class="" href="">'+ingVO['ingName']+'</a></li>';
-//                })$("#small_wrap").html(ingInsert);
-//             }
-//          })
-         
-//       } 
+<!-- 카테고리 ajax -->
+<script type="text/javascript">
+   $(function () {
       
+      $('.column').each(function() {
+         var column = $(this);
+         var query = $(this).find('h3').text();
+         console.log(query);
+         
+            $.ajax({
+               url : "${pageContext.request.contextPath}/recipe/getCategoryNames",
+               data : {"type" : query},
+               method : "post",
+               success:function(result) {
+                  //alert("통신 성공 : " + JSON.stringify(result));
+                  
+               var tagInsert = "";
+               $.each(result, function(i, TagVO) {
+                  tagInsert += '<li><input type="checkbox" name="chk-situ" value="1" />'+ TagVO["tagName"] +'</li>'
+               });
+               
+               column.html(column.html()+tagInsert);
+                  
+               },
+               error: function(xhr, status, error) {
+                  alert("에러발생. status : " + status + ", xhr : " + xhr + ", error : " + error);   
+               }
+            })
+      })
+   });
+</script>
+<script>
+	
+	$(".close").on("click", function() {
+	    $(".modal-dialog").close();
+	});
 
+	var availableTags = [];       
+    var selectIngredientsName=[];
+    
+    function ajaxIngredientsName(Type){
+       
+       $.ajax({
+             url:"${pageContext.request.contextPath}/ingredientsName",
+             method:"get",
+             data:{"Type":Type},
+             success:function(ingredientsNameList){
+                var ingredientsNameInsert = "";
+                availableTags = [];
+                 $.each(ingredientsNameList, function(i, name){
+                       availableTags.push(name);
+                         ingredientsNameInsert += '<li><a class="ingredientsName" href="#">'+name+'</a></li>';
+                      })
+                      
+                      $("#small_wrap").html(ingredientsNameInsert);
+                      
+                      
+                      $('.ingredientsName').bind('click', function(){
+                         var selected = $(this).text();
+                         var selectIngredientsNameInsert = "";
+                         if(selectIngredientsName.indexOf(selected) == -1){
+                            selectIngredientsName.push(selected);
+                            selectIngredientsNameInsert += '<div><input type="button" id ="selectedName" value="'+$(this).text()+'"/></div>';
+                            
+                            if($("#select_Ingredients").text() == '재료를 선택해주세요.') {
+                             console.log('재료를 선택해주세요 없앰')
+                             $("#select_Ingredients").empty();
+                            }
+                            $("#select_Ingredients").append(selectIngredientsNameInsert);
+                         }else{
+                            alert("이미 선택한 재료입니다.");
+                         }
+                         
+                       });
+                  }
+                })
+    }
+
+      $(function(){
+         // 전체 타입 얻어오기
+          $.ajax({
+             url:"${pageContext.request.contextPath}/ingredientsType",
+             method:"get",
+             success:function(ingredientsTypeList){
+                var ingredientsTypeInsert = "";
+                $.each(ingredientsTypeList, function(i, type){
+                   ingredientsTypeInsert += '<li><a class="ingredientsType" href="#">'+type+'</a></li>';
+                })
+                
+                $("#big_wrap").html(ingredientsTypeInsert);   
+                
+                // 타입을 클릭하면 해당 타입의 재료 얻어와서 보여주기
+                $('.ingredientsType').bind('click', function(){
+                   ajaxIngredientsName($(this).text());
+                   
+                   }); 
+                
+             }
+          })
+          
+          // 전체 재료 얻어오기
+          ajaxIngredientsName(null);
+          
+          $('#Modals').on('shown.bs.modal',function(){
+             $( "#thisIngredients" ).autocomplete({
+                 source: availableTags
+               },'appendTo','#Modals');
+          })
+       })
+       
 </script>
 
 
 </head>
 <body>
 
-<div class="modal fade" id="Modals">
-  <div class="modal-dialog" id="extra">
-    <div class="modal-content">
-      <div class="modal-header" id = "head"><h2 style="color:#c12048;">내가 가진 재료로 레시피 추천받자!</h2></div>
-      <div class="modal-body">
-      <section class="recomand">
-         <div class="inner">
-            <form class="mbr-form" action="" method="get" data-form-title="Mobirise Form">
-              <fieldset class="field1">
-                 <div class="IngredientSearch">
-                  <input  class="whatIngredient" type="text" name="" id="thisIngredients" value="" placeholder = "재료명으로 검색해보세요"/>
-                    <button class="search2" id="">검색</button>
-                 </div>
-           <ul class="big_wrap" id="big_wrap">
-<!--               <li><a class="messi" href="javascript:void(0)" onclick="thisSort('곡류');">곡류</a></li> -->
-<!--               <li><a class="messi" href="javascript:void(0)" onclick="thisSort('면/만두류');">면/만두류</a></li> -->
-<!--               <li><a class="messi" href="">빵류</a></li> -->
-<!--               <li><a class="messi" href="">과자류</a></li> -->
-<!--               <li><a class="messi" href="">떡류</a></li> -->
-<!--               <li><a class="" href="">감자/고구마류</a></li> -->
-<!--               <li><a class="" href="">묵/두부</a></li> -->
-<!--               <li><a class="" href="">콩/견과류</a></li> -->
-<!--               <li><a class="" href="">채소류</a></li> -->
-<!--               <li><a class="" href="">과일류</a></li> -->
-<!--               <li><a class="" href="">고기류</a></li> -->
-<!--               <li><a class="" href="">햄/소시지</a></li> -->
-<!--               <li><a class="" href="">계란류</a></li> -->
-<!--               <li><a class="" href="">어패류</a></li> -->
-<!--               <li><a class="" href="">해조류</a></li> -->
-<!--               <li><a class="" href="">유제품/치즈류</a></li> -->
-<!--               <li><a class="" href="">양념류</a></li> -->
-<!--               <li><a class="" href="">초콜렛/사탕</a></li> -->
-<!--               <li><a class="" href="">음료/주류</a></li> -->
-           </ul>
-                       
-           <ul class="small_wrap" id="small_wrap">
-<%--            <c:forEach var = "ingVO" items="${ingVO}" varStatus="loop"> --%>
-<%--               <li><a class="" href="">${ingVO.ingName}</a></li> --%>
-<%--            </c:forEach> --%>
-           </ul>
-                 </fieldset>
-                 
-       <fieldset class="field2">
-        <dl>
-           <dt>
-              <h3>내가 선택한 재료</h3>
-           </dt>
-           <dd>
-              <ul>
-                 <li class="no_Ingredients">재료를 선택해주세요.</li>
-              </ul>
-              <div class = "btn">
-                 <button type="submit">이 재료로 추천받기</button>
-              </div>
-           </dd>
-        </dl>
-       </fieldset>
-     </form>
-   </div>
-  </section>
- </div>
-</div>
-</div>
-</div>
+	<div class="modal fade" id="Modals">
+		<div class="modal-dialog" id="extra">
+		      <!--close 버튼  -->
+         <button type="button" class="close" aria-label="Close">&times;</button>
+         
+			<div class="modal-content">
+				<div class="modal-header" id="head">
+					<h2 style="color: #c12048;">내가 가진 재료로 레시피 추천받자!</h2>
+				</div>
+				<div class="modal-body">
+					<section class="recomand">
+						<div class="inner">
+							<form class="mbr-form" action="" method="get"
+								data-form-title="Mobirise Form">
+								<fieldset class="field1">
+									<div class="IngredientSearch ui-front">
+										<label for="thisIngredients"></label> <input
+											class="whatIngredient" id="thisIngredients"
+											placeholder="재료명으로 검색해보세요" />
+										<button class="search2" id="">담기</button>
+									</div>
+									<ul class="big_wrap" id="big_wrap">
 
-   <section class="menu cid-r4OiAWAZRu" once="menu" id="menu2-0">
+									</ul>
+
+									<ul class="small_wrap" id="small_wrap">
+
+									</ul>
+								</fieldset>
+
+								<fieldset class="field2">
+									<dl>
+										<dt>
+											<h3>내가 선택한 재료</h3>
+										</dt>
+										<dd>
+											<ul>
+												<li class="select_Ingredients" id="select_Ingredients">재료를
+													선택해주세요.</li>
+											</ul>
+											<div class="btn">
+												<button type="submit">이 재료로 추천받기</button>
+											</div>
+										</dd>
+									</dl>
+								</fieldset>
+							</form>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section class="menu cid-r4OiAWAZRu" once="menu" id="menu2-0">
 
 
 
@@ -383,20 +440,25 @@
                <b style="color: red">${userVO.nickname}(${userVO.email})</b>님 환영합니다.
                  </c:if>
 
-            <ul class="navbar-nav nav-dropdown nav-right"
-               data-app-modern-menu="true">
-               <li class="nav-item"><a
-                  class="nav-link link text-black display-5"
-                  href="https://mobirise.com" data-toggle="modal" data-target="#Modals"><span
-                     class="mbrib-smile-face mbr-iconfont mbr-iconfont-btn" title="있는 재료로 추천받기"></span></a></li>
-               <li class="nav-item"><a
-                  class="nav-link link text-black display-5" href="${pageContext.request.contextPath}/recipe/new"><span
-                     class="mbri-plus mbr-iconfont mbr-iconfont-btn" title="내 레시피 등록하기"></span></a></li>
-               <li class="nav-item dropdown open"><a
-                  class="nav-link link text-black dropdown-toggle display-5" href=""
-                  data-toggle="dropdown-submenu" aria-expanded="true"><span
-                     class="mbri-users mbr-iconfont mbr-iconfont-btn"></span></a>
-                  <div class="dropdown-menu">
+				<ul class="navbar-nav nav-dropdown nav-right"
+					data-app-modern-menu="true">
+					<li class="nav-item"><a
+						class="nav-link link text-black display-5" href="#"
+						data-toggle="modal" data-target="#Modals"><span
+							class="mbrib-smile-face mbr-iconfont mbr-iconfont-btn"
+							title="있는 재료로 추천받기"></span></a></li>
+							
+					<li class="nav-item"><a
+						class="nav-link link text-black display-5"
+						href="${pageContext.request.contextPath}/recipe/new"><span
+							class="mbri-plus mbr-iconfont mbr-iconfont-btn"
+							title="내 레시피 등록하기"></span></a></li>
+					<li class="nav-item dropdown open"><a
+						class="nav-link link text-black dropdown-toggle display-5" href=""
+						data-toggle="dropdown-submenu" aria-expanded="true"><span
+							class="mbri-users mbr-iconfont mbr-iconfont-btn"></span></a>
+
+						<div class="dropdown-menu">
 							<c:choose>
 								<c:when test="${empty userVO}">
 									<a class="text-black dropdown-item display-5"
@@ -424,96 +486,110 @@
 									href="${pageContext.request.contextPath}/list"
 									aria-expanded="false">회원목록</a>
 							</c:if>
-                  </div></li>
-            </ul>
+						</div></li>
+				</ul>
 
-         </div>
+			</div>
       </nav>
    </section>
 
    <section class="engine">
       <a href="https://mobiri.se/q">responsive website templates</a>
    </section>
-   
-   <section class="mbr-section content8 cid-r4OiCHvuLI" id="content8-2">
-   <div class="container">
-         <div class="media-container-row title">
-            <div class="col-12 col-xl-10">
-               <div class="mbr-section-btn align-center">
-               
-            <nav id="ddmenu">
-             <div class="menu-icon"></div>
-             <ul>
-                 <li class="full-width">
-                     <span class="top-heading">&nbsp;&nbsp;&nbsp;카테고리&nbsp;&nbsp;&nbsp;</span>
-                     <i class="caret"></i>&nbsp;&nbsp;&nbsp;
-                     <div class="dropdown">
-                         <div class="dd-inner">
-                             <ul class="column">
-                                 <li><h3>상황별 요리</h3></li>
-                                 <li><a href="#">간식/야식</a></li>
-                                 <li><a href="#">술안주</a></li>
-                                 <li><a href="#">해장요리</a></li>
-                                 <li><a href="#">손님 접대 요리</a></li>
-                                 <li><a href="#">나들이 요리</a></li>
-                                 <li><a href="#">파티/명절요리</a></li>
-                                 <li><a href="#">실생활 요리</a></li>
-                             </ul>
-                             <ul class="column">
-                                 <li><h3>나라별 요리</h3></li>
-                                 <li><a href="#">한식 요리</a></li>
-                                 <li><a href="#">중식 요리</a></li>
-                                 <li><a href="#">일식 요리</a></li>
-                                 <li><a href="#">동남아/인도 요리</a></li>
-                                 <li><a href="#">멕시칸 요리</a></li>
-                                 <li><a href="#">양식 요리</a></li>
-                                 <li><a href="#">퓨전 요리</a></li>
-                             </ul>
-                             <ul class="column">
-                                 <li><h3>재료별 요리</h3></li>
-                                 <li><a href="#">육류 요리</a></li>
-                                 <li><a href="#">채소류 요리</a></li>
-                                 <li><a href="#">해산물 요리</a></li>
-                                 <li><a href="#">콩/두부 요리</a></li>
-                                 <li><a href="#">과일 요리</a></li>
-                                 <li><a href="#">달걀/유제품 요리</a></li>
-                                 <li><a href="#">면/만두 요리</a></li>
-                                 <li><a href="#">김치 요리</a></li>
-                                 <li><a href="#">제철재료 요리</a></li>
-                                 <li><a href="#">가공식품 요리</a></li>
-                             </ul>
-                             <ul class="column">
-                                 <li><h3>조리법별 요리</h3></li>
-                                 <li><a href="#">밥 요리</a></li>
-                                 <li><a href="#">면 요리</a></li>
-                                 <li><a href="#">국물 요리</a></li>
-                                 <li><a href="#">찜/조리/구이 요리</a></li>
-                                 <li><a href="#">볶음/튀김/부침 요리</a></li>
-                                 <li><a href="#">나물/샐러드 요리</a></li>
-                                 <li><a href="#">김장/절임 요리</a></li>
-                                 <li><a href="#">베이킹/디저트 요리</a></li>
-                                 <li><a href="#">양념/소스/잼</a></li>
-                                 <li><a href="#">음료/차/커피</a></li>
-                             </ul>
-                             <!-- <ul class="column mayHide">
+
+	<section class="mbr-section content8 cid-r4OiCHvuLI" id="content8-2">
+		<div class="container">
+			<div class="media-container-row title">
+				<div class="col-10 col-xl-12">
+					<div class="mbr-section-btn align-center">
+
+						<nav id="ddmenu">
+							<div class="menu-icon"></div>
+							<ul>
+								<li class="full-width"><span class="top-heading">&nbsp;&nbsp;&nbsp;카테고리&nbsp;&nbsp;&nbsp;</span>
+									<i class="caret"></i>&nbsp;&nbsp;&nbsp;
+
+									<div class="dropdown">
+										<form
+											action="${pageContext.request.contextPath}/recipe/recipeTagList"
+											method="post">
+											<div class="dd-inner" id="checkboxArea">
+												<ul class="column" id="col-si">
+													<li><h3>상황별 요리</h3></li>
+													<!--                                  <li><input type="checkbox" name="chk-situ" value="1" />&nbsp;간식/야식</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-situ" value="2" />&nbsp;술안주</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-situ" value="3" />&nbsp;해장요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-situ" value="4" />&nbsp;손님 접대 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-situ" value="5" />&nbsp;나들이 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-situ" value="6" />&nbsp;파티/명절요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-situ" value="7" />&nbsp;실생활 요리</li> -->
+												</ul>
+												<ul class="column" id="col-co">
+													<li><h3>나라별 요리</h3></li>
+													<!--                                  <li><input type="checkbox" name="chk-nati" value="8" />&nbsp;한식 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-nati" value="9" />&nbsp;중식 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-nati" value="10" />&nbsp;일식 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-nati" value="11" />&nbsp;동남아/인도 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-nati" value="12" />&nbsp;멕시칸 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-nati" value="13" />&nbsp;양식 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-nati" value="14" />&nbsp;퓨전 요리</li> -->
+												</ul>
+												<ul class="column col-in">
+													<li><h3>재료별 요리</h3></li>
+													<!--                                  <li><input type="checkbox" name="chk-ingr" value="15" />&nbsp;육류 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-ingr" value="16" />&nbsp;채소류 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-ingr" value="17" />&nbsp;해산물 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-ingr" value="18" />&nbsp;콩/두부 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-ingr" value="19" />&nbsp;과일 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-ingr" value="20" />&nbsp;달걀/유제품 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-ingr" value="21" />&nbsp;면/만두 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-ingr" value="22" />&nbsp;김치 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-ingr" value="23" />&nbsp;제철재료 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-ingr" value="24" />&nbsp;가공식품 요리</li> -->
+												</ul>
+												<ul class="column col-re">
+													<li><h3>조리법별 요리</h3></li>
+													<!--                                  <li><input type="checkbox" name="chk-cook" value="25" />&nbsp;밥 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-cook" value="26" />&nbsp;면 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-cook" value="27" />&nbsp;국물 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-cook" value="28" />&nbsp;찜/조리/구이 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-cook" value="29" />&nbsp;볶음/튀김/부침 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-cook" value="30" />&nbsp;나물/샐러드 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-cook" value="31" />&nbsp;김장/절임 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-cook" value="32" />&nbsp;베이킹/디저트 요리</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-cook" value="33" />&nbsp;양념/소스/잼</li> -->
+													<!--                                  <li><input type="checkbox" name="chk-cook" value="34" />&nbsp;음료/차/커피</li> -->
+												</ul>
+												<!-- <ul class="column mayHide">
                                  <li><br /><img src="ddmenu/img1.jpg" /></li>
                              </ul> -->
-                         </div>
-                     </div>
-                 </li>
-                 <li class="no-sub"><a class="top-heading" href="${pageContext.request.contextPath}/recipe/nightmeal">&nbsp;&nbsp;야식&nbsp;&nbsp;</a></li>
-                 <li class="no-sub"><a class="top-heading" href="${pageContext.request.contextPath}/recipe/ranking/user">&nbsp;&nbsp;랭킹&nbsp;&nbsp;</a></li>
-                 <li class="no-sub"><a class="top-heading" href="${pageContext.request.contextPath}/recipe/recipeList">&nbsp;&nbsp;전체 레시피&nbsp;&nbsp;</a></li>
-                 <li class="no-sub"><a class="top-heading" href="${pageContext.request.contextPath}/youtuber">&nbsp;&nbsp;유튜버 먹방&nbsp;&nbsp;</a></li>
-             </ul>
-         </nav>
-         
-         </div>
-      </div>
-   </div>
-</div>
-</section>   
-   
-   
-   </body>
+											</div>
+											<input type="submit" value="검색하기" id="getCheckedAll"
+												class="btn btn-secondary btn-sm">
+											<!--                            <!-- <input type="button" value="getall" id="getCheckedAll"> -->
+											<!-- <input type="hidden" id="splitCode" name="splitCode" value="A,C,D" />  -->
+										</form>
+									</div></li>
+								<li class="no-sub"><a class="top-heading"
+									href="${pageContext.request.contextPath}/recipe/recipeTagList?TagName=야식">&nbsp;&nbsp;야식&nbsp;&nbsp;</a></li>
+								<li class="no-sub"><a class="top-heading"
+									href="${pageContext.request.contextPath}/ranking/rankingMain">&nbsp;&nbsp;랭킹&nbsp;&nbsp;</a></li>
+								<li class="no-sub"><a class="top-heading"
+									href="${pageContext.request.contextPath}/recipe/recipeList">&nbsp;&nbsp;전체
+										레시피&nbsp;&nbsp;</a></li>
+								<li class="no-sub"><a class="top-heading"
+									href="${pageContext.request.contextPath}/youtuber">&nbsp;&nbsp;유튜버
+										먹방&nbsp;&nbsp;</a></li>
+							</ul>
+						</nav>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+</body>
+    
 </html>

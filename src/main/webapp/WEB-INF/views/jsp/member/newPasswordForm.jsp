@@ -89,7 +89,7 @@
 										for="name-form1-t">가입되어있는 이메일을 입력해주세요</label> <input
 										type="email" class="form-control" name="email"
 										data-form-field="Name" placeholder="이메일" id="email" required>
-									<!-- 스타일 수정 임지영1 시작 -->
+	<!-- 								스타일 수정 임지영1 시작
 									<br> <label
 										class="form-control-label mbr-fonts-style display-7"
 										for="phone-form1-t">비밀번호 찾기 힌트</label> <select
@@ -109,7 +109,7 @@
 								</div>
 								<input type="text" class="form-control" name="hinta"
 									data-form-field="Phone" placeholder="답변을 입력해 주세요" id="hinta">
-							</div>
+							</div> -->
 							<br> <input type="submit"
 								class="btn btn-secondary btn-form display-4"
 								style="width: 50%; padding-left: 10px; padding-right: 10px; font-size: 130%; border-radius: 30px;"

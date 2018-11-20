@@ -49,7 +49,12 @@ a:hover {
 }
 
 </style>
-
+<script>
+if(${empty userVO}) {
+   alert("로그인이 필요합니다");
+   location.href = "${pageContext.request.contextPath}/login";      
+}
+</script>
 </head>
 <body>
    <header><jsp:include
@@ -86,7 +91,9 @@ a:hover {
          </div>
          <div class="media-container-row">
             <br>
+            <a href="${pageContext.request.contextPath}/ranking/userPage?no=${recipe.userNo}">
             <h5 style="text-align: center; padding-top: 20px;"><strong>${recipe.userNickName}</strong></h5>
+            </a>
             <button id="follow"
                class="<c:out value="${followCheck == 0? 'btn btn-primary-outline display-4':'btn btn-primary-outline display-4 active'}"/>"
                style="width: 150px;heignt:20; font-size: 13px;">

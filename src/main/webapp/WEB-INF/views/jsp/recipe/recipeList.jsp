@@ -106,21 +106,35 @@
                      	<c:choose>
 	                     	<c:when test="${empty userVO }">
 	                           <a href="#" onclick="AfterLogin();"> 
-	                           		<img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="">
+	                           		<img src="${pageContext.request.contextPath}/resources/css/assets/images/06.jpg" alt="Mobirise" title="">
 	                  		   </a>
 	                     	</c:when>
                      	<c:otherwise>
 	                        <a
 	                           href="${pageContext.request.contextPath}/recipe/readPage${pagingMaker.makeFind(pagingMaker.cri.page)}&no=${recipe.no}&userNo=${userVO.no}&click=1">
-	                           <img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="">
+	                           <img src="${pageContext.request.contextPath}/resources/css/assets/images/06.jpg" alt="Mobirise" title="">
 	                        </a>
-                        </c:otherwise>
+                        </c:otherwise> 
                         </c:choose>
                      </div>
                      <div class="card-box">
                         <h10 class="mbr-text mbr-fonts-style display-7">글번호:&nbsp;${recipe.no}</h10>
-                        <h4 class="card-title mbr-fonts-style display-7">${recipe.title}</h4>
-                        <p class="mbr-text mbr-fonts-style display-7">${recipe.subTitle}</p>
+                        
+                        <c:if test="${recipe.title.length()>10}">
+                        	<h4 class="card-title mbr-fonts-style display-7">${recipe.title.substring(0,10)} ... </h4>
+                        </c:if>
+                        <c:if test="${recipe.title.length()<=10}">
+                        	<h4 class="card-title mbr-fonts-style display-7">${recipe.title}</h4>
+                        </c:if>
+                        
+                        <c:if test="${recipe.subTitle.length()>10}">
+                        	<p class="mbr-text mbr-fonts-style display-7">${recipe.subTitle.substring(0,10)} ...</p>
+                        </c:if>
+                        <c:if test="${recipe.subTitle.length()<=10}">
+                        	<p class="mbr-text mbr-fonts-style display-7">${recipe.subTitle}</p>
+                        </c:if>
+                        
+                        
                         <p class="mbr-text mbr-fonts-style display-7">${recipe.userNickName}님</p>
                         <br>
                         <h5 class="mbr-text mbr-fonts-style display-7">조회수:&nbsp;${recipe.viewCnt}</h5>
@@ -140,13 +154,13 @@
                      	<c:choose>
 	                     	<c:when test="${empty userVO }">
 	                     		<a href="#" onclick="AfterLogin();"> 
-	                				<img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="">
+	                				<img src="${pageContext.request.contextPath}/resources/css/assets/images/06.jpg" alt="Mobirise" title="">
 	                     		</a>
 	                     	</c:when>
                      	<c:otherwise>
 	                        <a
 	                           href="${pageContext.request.contextPath}/recipe/readPage${pagingMaker.makeFind(pagingMaker.cri.page)}&no=${recipe.no}&userNo=${userVO.no}&click=1">
-	                           <img src="${pageContext.request.contextPath}/resources/css/assets/images/015.jpg" alt="Mobirise" title="">
+	                           <img src="${pageContext.request.contextPath}/resources/css/assets/images/06.jpg" alt="Mobirise" title="">
 	                        </a>
                         </c:otherwise>
                         </c:choose>

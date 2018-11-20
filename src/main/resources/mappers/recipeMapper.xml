@@ -327,7 +327,8 @@
           and type = 'D')
    </select>
    
-    <!-- home 레시피 조회 -->
+    <!-- home 레시피 조회   -->
+    <!--************************랭킹*********************************  -->    
    <select id="selectBestRecipe" resultType="recipeVO">
     <![CDATA[
       select X.rnum, X.no, X.user_no as userNo, X.title, x.sub_title as subTitle, X.time, X.cost, X.content
@@ -339,10 +340,69 @@
           from (
               select no, user_no, title, sub_title, time, cost, content, user_nickname, recipe_name, reg_date, view_cnt, servings,point
               from recipeboard
-              order by point desc) A
-          where rownum <= 4) X
+              order by point desc) A) X
           ]]>
    </select>
+   
+      <select id="selectBestMember" resultType="memberVO">
+    <![CDATA[
+      select b.rnum, b.no, b.email, b.name, b.nickname,b.tel,b.age,b.comments,b.type,b.point, b.follower_cnt as followrCnt, b.file_fakename
+     	from(
+ 		 select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.age, a.comments, a.type, a.point, a.follower_cnt, a.file_fakename
+ 		    from (
+     			select no, email, name, nickname,age, tel, comments, type, point,follower_cnt, file_fakename
+ 		            from ruser
+ 		            order by follower_cnt desc) a ) b
+          ]]>
+   </select>
+   
+         <select id="selectBestMemberR" resultType="memberVO">
+    <![CDATA[
+      select b.rnum, b.no, b.email, b.name, b.nickname,b.tel,b.age,b.comments,b.type,b.point, b.follower_cnt as followrCnt, b.file_fakename
+     	from(
+ 		 select rownum as rnum, a.no, a.email, a.name, a.nickname, a.tel, a.age, a.comments, a.type, a.point, a.follower_cnt, a.file_fakename
+ 		    from (
+     			select no, email, name, nickname,age, tel, comments, type, point,follower_cnt,file_fakename
+ 		            from ruser
+ 		            order by follower_cnt desc) a ) b
+          ]]>
+   </select>
+   
+ <!--************************회원 상세*********************************  -->    
+   <select id="pointCnt" resultType="int">
+   		select count(*) from rpoint where receipe_user_no = #{no}
+   </select>
+   <select id="recipeCnt" resultType="int">
+		select count(*) from recipeboard where user_no = #{no}
+   </select>
+	<select id="userPageRecipe" resultType="recipeVO">
+      <![CDATA[
+      select X.rnum, X.no, X.user_no as userNo, X.title, x.sub_title as subTitle, X.time, X.cost, X.content
+            , X.user_nickname as userNickName, X.recipe_name as recipeName, to_char(X.reg_date, 'yyyy-MM-dd') as regDate
+            , X.view_cnt as viewCnt, X.servings
+      from ( 
+          select rownum as rnum, A.no, A.user_no, A.title, A.sub_title, A.time, A.cost, A.content
+                    , A.user_nickname, A.recipe_name, A.reg_date, A.view_cnt, A.servings
+          from (
+              select no, user_no, title, sub_title, time, cost, content, user_nickname, recipe_name, reg_date, view_cnt, servings
+              from recipeboard
+              order by reg_date desc) A
+          where user_no = #{no}) X
+      ]]>
+   </select>
+   <select id="likeRecipe" resultType="recipeVO">
+		select no, user_no as userNo, title, sub_title as subTitle, time, cost, content, 
+				user_nickname as userNickName, recipe_name as recipeName, reg_date as regDate, 
+				view_cnt as viewCnt, servings
+		 from recipeboard,
+		(select receipe_no from rpoint where user_no = #{no}) aa
+		where aa.receipe_no = no
+		order by reg_date desc
+   </select>
+   <select id="followingCnt" resultType="int">
+		select count(*) from rfollow where follower=#{no}
+   </select>
+   
  <!--************************팔로우*********************************  -->    
    
    <update id="getFollowCnt">
@@ -383,6 +443,14 @@
       from recipeboard
 
    </select>
+   
+   <!-- 카테고리 불러오기 -->
+   <select id="getCategoryNames" parameterType="String" resultType="tagVO">
+       select no as tagNo, type tagType, name tagName 
+       from tags
+       where type = #{ type }
+       order by no
+   </select> 
    
 
 </mapper>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import kr.co.bapsi.member.vo.MemberVO;
 import kr.co.bapsi.recipe.vo.FindCriteria;
 import kr.co.bapsi.recipe.vo.FindTagCriteria;
 import kr.co.bapsi.recipe.vo.IngVO;
@@ -48,7 +49,19 @@ public interface RecipeService {
 	//싫어요취소
 	public void deleteLogDown(int userNo,int receipeUserNo, int receipeNo);
 	
+	//랭킹페이지 관련
 	public List<RecipeVO> selectBestRecipe();
+	public List<MemberVO> selectBestMember();
+	public List<MemberVO> selectBestMemberR();
+	
+	//회원 상세보기 관련
+	public int pointCnt(int no);
+	public int recipeCnt(int no);
+	public List<RecipeVO> userPageRecipe(int no);
+	public List<RecipeVO> likeRecipe(int no);
+	public int followingCnt(int no);
+	
+	
 	// -------------------------팔로우-----------------------------------
 	public void getFollowCnt(int receipeUserNo);
 	public void insertFollower(int userNo, int receipeUserNo);
@@ -69,6 +82,7 @@ public interface RecipeService {
 	
 //**********************************뷰카운트 조회 *****************************************
 	int viewCnt();
-
+//*********************************희승 체크박스 조회 *****************************************
+	 public List<TagVO> getCategoryNames(String type);
    
 }

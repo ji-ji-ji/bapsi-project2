@@ -2,12 +2,11 @@ package kr.co.bapsi.recipe.dao;
 
 import java.util.List;
 
+import kr.co.bapsi.member.vo.MemberVO;
 import kr.co.bapsi.recipe.vo.FindCriteria;
 import kr.co.bapsi.recipe.vo.FindTagCriteria;
 import kr.co.bapsi.recipe.vo.IngVO;
-import kr.co.bapsi.recipe.vo.PageCriteria;
 import kr.co.bapsi.recipe.vo.RecipeVO;
-import kr.co.bapsi.recipe.vo.TagPageCriteria;
 /**
  * Recipe에 관련된 DAO
  * @author Administrator
@@ -125,12 +124,27 @@ public interface RecipeDAO {
     */
    public void delete(int no);
 
+   /**
+    * 랭킹 페이지
+    */
    public List<RecipeVO> selectBestRecipe();
+   public List<MemberVO> selectBestMember();
+   public List<MemberVO> selectBestMemberR();
    
-   
+   /**
+    * 회원 상세
+    */
+	public int pointCnt(int no);
+	public int recipeCnt(int no);
+	public List<RecipeVO> userPageRecipe(int no);
+	public List<RecipeVO> likeRecipe(int no);
+	public int followingCnt(int no);
+	
    //전체 뷰카운트DAO
    public int viewCnt();
    
+ //*********************************희승 체크박스 조회 *****************************************
+	  public List<TagVO> getCategoryNames(String type);
 
    
    

@@ -35,6 +35,7 @@ public class UploadController {
    public ModelAndView uploadProfile(MultipartFile file, ModelAndView mav, HttpSession session) throws Exception{
       
          UploadVO upload = new UploadVO();
+         
          MemberVO authUser = (MemberVO)session.getAttribute("userVO");
                
          System.out.println("파일 이름 : " + file.getOriginalFilename());
@@ -56,11 +57,13 @@ public class UploadController {
            upload.setUserNo(authUser.getNo());
            upload.setFile_oriname(file.getOriginalFilename());
            upload.setFile_fakename(savedName);
+           authUser.setFile_fakename(savedName);
            
            System.out.println("upload no : " + authUser.getNo());
            System.out.println("upload fakename : " + savedName);
            
            sqlSession.insert("uploadProfile", upload);
+           sqlSession.insert("putFakename", authUser);
            
            mav.setViewName("jsp/member/uploadCome");
            mav.addObject("savedName", savedName);
@@ -109,6 +112,7 @@ public class UploadController {
           }
           
        sqlSession.delete("deleteProfile", authUser.getNo());
+       sqlSession.update("outFakename", authUser.getNo());
        
        session.removeAttribute(profile);
        /*session.invalidate();*/
@@ -141,6 +145,7 @@ public class UploadController {
            }
            
         sqlSession.delete("memberDeleteProfile", no);
+        sqlSession.update("outFakename", no);
 
        
        return "jsp/admin/memberFileOut";

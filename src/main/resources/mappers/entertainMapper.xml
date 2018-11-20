@@ -71,21 +71,31 @@
      
   </select>
   
+  <!-- 랜덤음식 추천 -->
   <select id = "randomEat" parameterType="int" resultType="RandomEatVO">
-  	select food, url
-  	from randomEat
-  	where no = #{no}
+     select food, url
+     from randomEat
+     where no = #{no}
   </select>
   
-  <select id = "sort" parameterType="String" resultType="ingVO">
+  <!-- 있는재료로 음식 만들기 -->
+  
+  <!-- 타입 보여주기 -->
+  <select id = "ingredientsTypeList" parameterType="String" resultType="String">
+     select type from ingredients group by (type) order by min(no)
+  </select>
+  
+  <!-- 모든 재료 보여주기 -->
+  <select id = "ingredientsNameList" resultType = "String">
+     select name
+     from  ingredients group by (name) order by min(no)
+  </select>
+  
+  <!-- 타입에 따라 재료 보여주기 -->
+  <select id = "selectIngredientsType" parameterType="String" resultType="String">
      select name as ingName
      from ingredients
      where type = #{type}
   </select>
-  
-   <select id = "typeList" parameterType="String" resultType="String">
-     select type from ingredients group by (type) order by min(no)
-  </select>
-     
-     
+    
   </mapper>

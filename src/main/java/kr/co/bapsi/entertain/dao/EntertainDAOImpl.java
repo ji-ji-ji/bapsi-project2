@@ -32,19 +32,24 @@ public class EntertainDAOImpl implements EntertainDAO{
    
    @Override
    public RandomEatVO randomEat(int no) throws Exception {
-	   
-	   return sqlSession.selectOne("randomEat", no);
+      
+      return sqlSession.selectOne("randomEat", no);
    }
    
    @Override
-   public List<IngVO> ingredients(String type) throws Exception {
-
-      return sqlSession.selectList("sort", type);
-   }
-
-   @Override
-   public List<String> selectTypeList() throws Exception {
-      return sqlSession.selectList("typeList");
+   public List<String> ingredientsTypeList() throws Exception {
+      return sqlSession.selectList("ingredientsTypeList");
    }
    
+   @Override
+   public List<String> ingredientsNameList() throws Exception {
+      return sqlSession.selectList("ingredientsNameList");
+   }
+   
+   @Override
+   public List<String> selectIngredientsType(String type) throws Exception {
+
+      return sqlSession.selectList("selectIngredientsType", type);
+   }
+
 }
